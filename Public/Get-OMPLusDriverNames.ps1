@@ -1,5 +1,3 @@
-$OMHOMEPath = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechnologies\OMPlusServer' -Name OMHOMEPath).OMHOMEPath
-
 function Get-OMPLusDriverNames {
     <#
     .SYNOPSIS
@@ -27,7 +25,7 @@ function Get-OMPLusDriverNames {
     #>
     [CmdletBinding()]
     param()
-    $XMLPath = [system.io.path]::combine($OMHOMEPath, 'system','types.conf')
+    $XMLPath = [system.io.path]::combine($Global:OMHOMEPath, 'system','types.conf')
     if (Test-Path -Path $XMLPath) {
     $XML = New-Object -TypeName XML
     $XML.Load($XMLPath)

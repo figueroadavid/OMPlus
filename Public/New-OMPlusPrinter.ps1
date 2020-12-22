@@ -250,10 +250,10 @@ function New-OMPlusPrinter {
         if ($IsFullTesting) { $PSBoundParameters }
 
         $PrinterName = $PrinterName.ToUpper().Replace(' ', '-')
-        $ValidTypes = Get-OMPLusDriverNames
+
 
         if ($DriverType) {
-            if ($DriverType -in $ValidTypes) {
+            if ($DriverType -in $Global:ValidTypes) {
                 $Message = 'DriverType "{0}" is a valid type' -f $DriverType
                 Write-Verbose -Message $Message
             }
@@ -277,7 +277,7 @@ function New-OMPlusPrinter {
         }
         if ($Comment) {
             if ($Comment.Contains('"')) {
-                $Comment = $Comment.Replace('"', ",")
+                $Comment = $Comment.Replace('"', "'")
                 Write-Warning -Message 'The Comment parameter contains a double-quote, replacing it with a single quote'
             }
         }
@@ -384,7 +384,7 @@ function New-OMPlusPrinter {
     }
 
     end {
-        $LPAdmin = [system.io.path]::combine( (Get-ItemProperty -Path HKLM:\SOFTWARE\PlusTechnologies\OMPlusServer -Name omhomepath).omhomepath, 'bin','lpadmin.exe' )
+        $LPAdmin = [system.io.path]::combine( $global:omhomepath, 'bin','lpadmin.exe' )
         if ($IsTesting -or $IsFullTesting) {
             '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
         }
@@ -400,4 +400,3 @@ function New-OMPlusPrinter {
         }
     }
 }
-

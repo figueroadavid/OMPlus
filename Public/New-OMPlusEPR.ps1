@@ -27,10 +27,7 @@ function New-OMPlusEPR {
     )
 
     Begin {
-        $DriverNames =
-    }
-
-    Begin {
         $HostName = [system.net.dns]::GetHostByName($env:COMPUTERNAME).hostname
+
     }
 }

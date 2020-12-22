@@ -5,37 +5,36 @@ function New-OMPlusSampleBulkImportFile {
         [string]$FilePath,
 
         [parameter(ValueFromPipelineByPropertyName)]
-        [char]$Delimiter = ',',
+        [char]$Delimiter = ',' ,
 
         [parameter(ValueFromPipelineByPropertyName)]
         [ValidateSet('TCPPort','LPRPort')]
         [string[]]$PortType = 'TCPPort',
 
         [parameter()]
-        [ValidateSet(
-            'Comment',
-            'Notes',
-            'DoNotValidate',
-            'PurgeTime',
-            'PageLimit',
-            'SupportNotes',
-            'WriteTimeout',
-            'TranslationTable',
-            'DriverType',
-            'PCAPPath',
-            'UserFilterPath',
-            'Filter2',
-            'Filter3',
-            'CPSMetering',
-            'InsertMissingFF',
-            'FormType',
-            'LFtoCRLF',
-            'CopyBreak',
-            'FileBreak',
-            'Banner',
-            'HasInternalWebServer',
-            'CustomURL',
-            'ForceWebServer'
+        [ValidateSet('Comment',
+                     'Notes',
+                     'DoNotValidate',
+                     'PurgeTime',
+                     'PageLimit',
+                     'SupportNotes',
+                     'WriteTimeout',
+                     'TranslationTable',
+                     'DriverType',
+                     'PCAPPath',
+                     'UserFilterPath',
+                     'Filter2',
+                     'Filter3',
+                     'CPSMetering',
+                     'InsertMissingFF',
+                     'FormType',
+                     'LFtoCRLF',
+                     'CopyBreak',
+                     'FileBreak',
+                     'Banner',
+                     'HasInternalWebServer',
+                     'CustomURL',
+                     'ForceWebServer'
         )]
         [String[]]$OptionalParameter,
 

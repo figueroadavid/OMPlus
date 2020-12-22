@@ -5,11 +5,11 @@ function Get-OMPlusPrinterConfiguration {
 
         [string[]]$Property = '*'
     )
-    $PrinterHome = [system.io.path]::Combine( $Global:OMHOMEPATH, 'printers')
-    $PrinterList = Get-ChildItem -Path $PrinterHome -Filter $PrinterName
+
+    $PrinterList = Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Filter $PrinterName
 
     foreach ($PrinterDirectory in $PrinterList) {
-        $ConfigPath = Join-Path -Path $PrinterDirectory -ChildPath 'configuration'
+        $ConfigPath = [System.IO.Path]::Combine($PrinterDirectory.FullName, 'configuration')
         $Config = Get-Content -Path $ConfigPath
         $Output = @{
             Printer = $PrinterDirectory.BaseName

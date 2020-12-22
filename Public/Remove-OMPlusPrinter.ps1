@@ -22,8 +22,7 @@ function  Remove-OMPlusPrinter {
     )
 
     Begin {
-        $RootPath = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechnologies\OMPlusServer' -Name OMHOMEPath).OMHOMEPath
-        $BinPath = [System.IO.Path]::Combine($RootPath, 'bin')
+        $BinPath = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
         $ExePath = [system.io.path]::Combine($BinPath, 'lpadmin.exe')
     }
 
