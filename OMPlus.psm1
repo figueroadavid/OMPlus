@@ -12,5 +12,6 @@ Get-ChildItem -Path .\Public -File -Filter *.ps1 | Where-Object fullname -notmat
 $Global:OMHOMEPath          = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechnologies\OMPlusServer' -Name OMHOMEPath).OMHOMEPath
 $GLobal:OMPlusPrinterPath   = [System.IO.Path]::Combine($Global:OMHOMEPath, 'printers')
 $Global:BinPath             = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
+$Global:OMPLusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
 $Global:ValidTypes          = Get-OMPLusDriverNames
 $Global:CRLF                = [Environment]::NewLine
