@@ -15,3 +15,4 @@ $Global:BinPath             = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin
 $Global:OMPLusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
 $Global:ValidTypes          = Get-OMPLusDriverNames
 $Global:CRLF                = [Environment]::NewLine
+$Global:OMPlusServerFQDN    = [system.net.dns]::GetHostByName($env:COMPUTERNAME).hostname
