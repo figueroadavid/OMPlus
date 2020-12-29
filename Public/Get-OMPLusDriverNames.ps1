@@ -6,7 +6,7 @@ function Get-OMPLusDriverNames {
         It locates the default installation path for OMPlus, and retrieves the type.conf.
         It then searches for all of the various types and returns the list of those types.
     .EXAMPLE
-        PS C:\> Get-OMPlustDriverNames
+        PS C:\> Get-OMPlusDriverNames
         DellOPDPCL5
         XeroxUPDPS
         LexUPDv2
