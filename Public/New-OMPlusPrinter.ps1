@@ -295,10 +295,10 @@ function New-OMPlusPrinter {
         $ArgString = New-Object -TypeName System.Collections.Generic.List[string]
         $null = $ArgString.Add( ('-p{0}' -f $PrinterName) )
         if ($PSBoundParameters -Contains 'LPRPort') {
-            $null = $ArgString.Add( ('-v{0}!{1}' -f $ipaddress, $Port) )
+            $null = $ArgString.Add( ('-v{0}!{1}' -f $ipaddress, $LPRPort) )
         }
         else {
-            $null = $ArgString.Add( ('-v{0}!{1}' -f $IPAddress, $LPRPort))
+            $null = $ArgString.Add( ('-v{0}!{1}' -f $IPAddress, $TCPPort))
         }
 
         $null = $ArgString.Add( ('-omode="{0}"' -f $Mode))
