@@ -24,6 +24,7 @@ using System.Management.Automation;
 
   $null = Add-Type -TypeDefinition $code *>&1
   Remove-Variable -Name code
+  # This is from https://powershell.one/powershell-internals/attributes/auto-completion
 }
 
 Get-ChildItem -Path $PSScriptRoot\Private -File -Filter *.ps1 | Where-Object fullname -notmatch '`.tests`.ps1' |
