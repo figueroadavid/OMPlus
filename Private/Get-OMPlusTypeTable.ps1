@@ -34,7 +34,8 @@ function Get-OMPlusTypeTable {
                 'ID'   { $SortType = 'ID' }
             }
             $Trays = Select-XML -XML $XML -XPath ('//PTYPE[@name="{0}"]/TRAYS/TRAY' -f $DriverType)  | Select-Object -ExpandProperty Node
-            $Trays | Select-Object -Property @{n=$SortType;e={$_.'#text'}},@{n='TrayID';e={$_.id}} | Sort-Object -Property $SortType
+            $Trays | Select-Object -Property @{n=$SortType;e={($_.'#text').Trim()}},@{n='TrayID';e={$_.id}} |
+                Where-Object { $null -ne $_.TrayRef } | Sort-Object -Property $SortType
         }
         'PaperSizes' {
             switch ($SortBy) {
@@ -42,7 +43,8 @@ function Get-OMPlusTypeTable {
                 'ID'   { $SortType = 'ID' }
             }
             $Paper = Select-XML -XML $XML -XPath ('//PTYPE[@name="{0}"]/PSIZE/PAPER' -f $DriverType) | Select-Object -ExpandProperty Node
-            $Paper | Select-Object -Property @{n=$SortType;e={$_.'#text'}},@{n='PaperSizeID';e={$_.id}} | Sort-Object -Property $SortType
+            $Paper | Select-Object -Property @{n=$SortType;e={($_.'#text').Trim()}},@{n='PaperSizeID';e={$_.id}} |
+                Where-Object { $null -ne $_.PaperSizeRef } | Sort-Object -Property $SortType
         }
         'MediaTypes' {
             switch ($SortBy) {
@@ -50,7 +52,8 @@ function Get-OMPlusTypeTable {
                 'ID'   { $SortType = 'ID' }
             }
             $Media = Select-XML -XML $XML -XPath ('//PTYPE[@name="{0}"]/MTYPE/MEDIA' -f $DriverType) | Select-Object -ExpandProperty Node
-            $Media | Select-Object -Property @{n=$SortType;e={$_.'#text'}},@{n='MediaTypeID';e={$_.id}} | Sort-Object -Property $SortType
+            $Media | Select-Object -Property @{n=$SortType;e={($_.'#text').Trim()}},@{n='MediaTypeID';e={$_.id}} |
+                Where-Object {$null -ne $_.MediaTypeRef} |Sort-Object -Property $SortType
         }
     }
 }
