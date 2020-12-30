@@ -1,23 +1,27 @@
 function Get-OMPlusPrinterConfiguration {
     [cmdletbinding()]
     param(
-        [string[]]$PrinterName = '*',
+        [string[]]$PrinterName,
 
-        [string[]]$Property = '*'
+        [string[]]$Property = 'All'
     )
 
-    $PrinterList = Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Filter $PrinterName
+    if ($Property -contains 'All') {
+        $AllProperties = $true
+    }
 
-    foreach ($PrinterDirectory in $PrinterList) {
-        $ConfigPath = [System.IO.Path]::Combine($PrinterDirectory.FullName, 'configuration')
+    foreach ($Printer in $PrinterName) {
+        $ConfigPath = [System.IO.Path]::Combine($GLobal:OMPlusPrinterPath, $Printer, 'configuration')
         $Config = Get-Content -Path $ConfigPath
         $Output = @{
-            Printer = $PrinterDirectory.BaseName
+            Printer = $Printer
         }
 
         $Config | ForEach-Object {
-            $_ -match '^(?<KeyName>\w+):\s(?<ValueName>.*)$'
-            $Output.Add($Matches.KeyName, $Matches.ValueName)
+            $null = $_ -match '^(?<KeyName>\w+):\s(?<ValueName>.*)$'
+            if ($Matches.KeyName -in $Property -or $AllProperties ) {
+                $Output.Add($Matches.KeyName, $Matches.ValueName)
+            }
         }
         $Output
     }
