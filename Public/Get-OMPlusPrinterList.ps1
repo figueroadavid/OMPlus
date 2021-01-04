@@ -1,15 +1,44 @@
-function Get-OMPlusPrinterName {
+function Get-OMPlusPrinterList {
+    <#
+    .SYNOPSIS
+        Retrieves a list of printers from OMPlus
+    .DESCRIPTION
+        It reads in the directory names in the 'printers' subdirectory in the OMPlusHome Path, and returns just the names
+    .EXAMPLE
+        PS C:\> Get-OMPlusPrinterList
+        Printer01
+        Printer02
+        Printer03
+        Printer04
+        MyPrint01
+        MyPrint02
+        MyPrint03
+        MyPrint04
+
+        Retrieves the list of printers in the directory
+    .EXAMPLE
+        PS C:\> Get-OMPlusPrinterList -MatchPattern printer*
+        Printer01
+        Printer02
+        Printer03
+        Printer04
+    .INPUTS
+        [string]
+    .OUTPUTS
+        [string]
+    .NOTES
+        The Filter parameter is passed to Get-ChildItem as the Filter parameter.
+    #>
     [cmdletbinding()]
     param(
         [parameter()]
-        [string]$MatchPattern
+        [string]$Filter
     )
 
-    $BasePath = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'printers')
-    if ($MatchPattern) {
-        Get-ChildItem -Path $BasePath -Directory | Where-Object basename -match $MatchPattern | Select-Object -ExpandProperty BaseName
+    if ($Filter) {
+        Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Directory -Filter $Filter | Select-Object -ExpandProperty BaseName
     }
     else {
-        Get-ChildItem -Path $OMPlusHome -Directory | Select-Object -ExpandProperty BaseName
+        Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Directory | Select-Object -ExpandProperty BaseName
     }
 }
