@@ -26,9 +26,7 @@ function New-OMPlusEPRRecordLite {
         [string[]]$TrayName,
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [AllowEmptyString()]
-        [AllowNull()]
-        [ValidateSet('Simplex', 'Horizontal', 'Vertical')]
+        [ValidateSet('None', 'Simplex', 'Horizontal', 'Vertical')]
         [string[]]$DuplexOption,
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -39,7 +37,7 @@ function New-OMPlusEPRRecordLite {
         [string[]]$IsRX = 'n',
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string[]]$MediaType
+        [string[]]$MediaType = 'None'
     )
 
     foreach ($Item in $EPRQueueName) {
@@ -54,11 +52,22 @@ function New-OMPlusEPRRecordLite {
         $RecordList.Add($DriverName)
         $RecordList.Add( ($TrayDictionary | Where-Object TrayRef -match $Tray |
                             Select-Object -ExpandProperty TrayID).ToString() )
+        if ($DuplexOption -eq 'None') {
+            $RecordList.Add('')
+        }
+        else {
+            $RecordList.Add($DuplexOption)
+        }
         $RecordList.Add( ($PaperSizeDictionary | Where-Object PaperSizeRef -match $PaperSize |
                             Select-Object -ExpandProperty PaperSizeID).ToString() )
         $RecordList.Add($IsRX)
-        $RecordList.Add( ($MediaTypeDictionary | Where-Object MediaTypeRef -match $MediaType |
-                            Select-Object -ExpandProperty MediaTypeID).ToString() )
+        if ($MediaType -eq 'None') {
+            $RecordList.Add('')
+        }
+        else {
+            $RecordList.Add( ($MediaTypeDictionary | Where-Object MediaTypeRef -match $MediaType |
+            Select-Object -ExpandProperty MediaTypeID).ToString() )
+        }
         $RecordList -join '|'
     }
 
