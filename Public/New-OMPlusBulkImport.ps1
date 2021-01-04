@@ -1,4 +1,31 @@
 function New-OMPlusBulkImport {
+    <#
+    .SYNOPSIS
+        Initiates a bulk import run of a CSV file into the New-OMPlusPrinter command.
+    .DESCRIPTION
+        The script takes the FilePath, and imports the CSV File, and then sends each
+        CSV Record into New-OMPlusPrinter using powershell splatting of the available
+        paramters.
+    .EXAMPLE
+        PS C:\> New-OMPlusBulkImport -FilePath c:\temp\omplusimport.csv -delimiter '|'
+
+        Imports the pipe delimited list into New-OMPlusPrinter, thereby generating
+        the correct lpadmin commands to add the printer. If the CSV record contains a populated column
+        for IsTesting, then the lpadmin commands are displayed rather than issued.
+    .INPUTS
+        [string]
+    .OUTPUTS
+        none or [string]
+    .NOTES
+        This initiates a bulk import of the import CSV file set up for New-OMPlusPrinter.
+        If the given CSV contains 'TRUE' or 'FALSE', they are converted to true powershell
+        boolen values ($true, $false).  New-OMPlusPrinter expects boolean values in certain
+        fields which to not translate properly to text.
+    .PARAMETER FilePath
+        The path to the CSV file
+    .PARAMETER Delimiter
+        This is the delimiter used by the file, the default is a comma ','
+    #>
     [cmdletbinding()]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
