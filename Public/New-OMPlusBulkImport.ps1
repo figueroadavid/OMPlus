@@ -41,7 +41,9 @@ function New-OMPlusBulkImport {
         $SuppliedProperties = $CSV | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
 
         if ($CSV.Count -gt 10) {
-            $ShowProgress = $true
+            $ShowProgress   = $true
+            $CurrentCounter = 0
+            $TotalCount = $CSV.Count
         }
 
     }
@@ -59,6 +61,15 @@ function New-OMPlusBulkImport {
                 else {
                     $OMSplat[$Property] = $Record.$Property
                 }
+            }
+            if ($ShowProgress) {
+                $CurrentCounter ++
+                $ProgSplat = @{
+                    Activity            = 'Creating printer {0}' -f $OMSplat['PrinterName']
+                    CurrentOperation    = '{0} of {1}' -f $CurrentCounter, $TotalCount
+                    PercentComplete     = [math]::round($CurrentCounter/$TotalCount * 100, [system.midpointrounding]::awayfromzero)
+                }
+                Write-Progress @ProgSplat
             }
             New-OMPlusPrinter @OMSplat
         }
