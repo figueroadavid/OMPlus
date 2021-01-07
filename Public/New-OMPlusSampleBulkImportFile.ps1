@@ -1,4 +1,26 @@
 function New-OMPlusSampleBulkImportFile {
+    <#
+    .SYNOPSIS
+        Generates a header file to create a new CSV file for bulk importing printers
+    .DESCRIPTION
+        Generates a header file to create a new CSV file for bulk importing printers
+    .EXAMPLE
+        PS C:\> $BIFSplat = @{
+            FilePath            = 'c:\temp\bulkimport.csv'
+            delimiter           = '|'
+            PortType            = 'TCPPort'
+            OptionalParameter   = 'Comment','Notes','SupportNotes','DoNotValidate','IsTesting'
+            IncludeComments     = $true
+        }
+        PS C:\> New-OMPlusSampleBulkImportFile @BIFSplat
+        Explanation of what the example does
+    .INPUTS
+        Inputs (if any)
+    .OUTPUTS
+        Output (if any)
+    .NOTES
+        General notes
+    #>
     [cmdletbinding()]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -34,7 +56,8 @@ function New-OMPlusSampleBulkImportFile {
                      'Banner',
                      'HasInternalWebServer',
                      'CustomURL',
-                     'ForceWebServer'
+                     'ForceWebServer',
+                     'IsTesting'
         )]
         [String[]]$OptionalParameter,
 
