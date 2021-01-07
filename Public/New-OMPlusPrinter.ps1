@@ -294,7 +294,7 @@ function New-OMPlusPrinter {
         Write-Verbose -Message 'Begin building command line string for lpadmin'
         $ArgString = New-Object -TypeName System.Collections.Generic.List[string]
         $null = $ArgString.Add( ('-p{0}' -f $PrinterName) )
-        if ($PSBoundParameters -Contains 'LPRPort') {
+        if ($LPRPort) {
             $null = $ArgString.Add( ('-v{0}!{1}' -f $ipaddress, $LPRPort) )
         }
         else {
