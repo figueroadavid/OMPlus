@@ -395,7 +395,7 @@ function New-OMPlusPrinter {
                 Wait            = $true
                 WindowStyle     = 'Hidden'
             }
-            Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName)
+            Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
             Start-Process @ProcSplat -Verb RunAs
         }
     }
