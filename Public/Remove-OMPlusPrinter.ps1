@@ -11,7 +11,7 @@ function  Remove-OMPlusPrinter {
     .INPUTS
         [system.string]
     .OUTPUTS
-        none
+        [system.string]
     .NOTES
         Uses the -x option of LPAdmin to remove the print destination.
     #>
@@ -27,10 +27,12 @@ function  Remove-OMPlusPrinter {
     }
 
     Process {
-        $Arguments = '-x {0}' -f $PrinterName.ToUpper()
-        if ($PSCmdlet.ShouldProcess(('Remove printer {0}' -f $PrinterName), '', '')) {
-            Start-Process -FilePath $ExePath -ArgumentList $Arguments -Wait -WindowStyle Hidden
-            Write-Warning -Message ('Do not forget to Remove the EPR Record for {0}' -f $PrinterName)
+        foreach ($Printer in $PrinterName) {
+            $Arguments = '-x {0}' -f $Printer.ToUpper()
+            if ($PSCmdlet.ShouldProcess(('Remove printer {0}' -f $PrinterName), '', '')) {
+                Start-Process -FilePath $ExePath -ArgumentList $Arguments -Wait -WindowStyle Hidden
+                Write-Warning -Message ('Do not forget to Remove the EPR Record for {0}' -f $PrinterName)
+            }
         }
     }
 
