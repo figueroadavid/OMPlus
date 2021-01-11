@@ -55,6 +55,8 @@ function New-OMPlusEPRRecordLite {
         available names in the types.conf file, and if more than one match is found, or if no matches
         are found, the record is not generated, and a warning is thrown. The text supplied is escaped
         to make sure the RegEx pattern is valid for the RegEx engine.
+
+
     #>
     [cmdletbinding()]
     param(
@@ -115,7 +117,7 @@ function New-OMPlusEPRRecordLite {
             }
             else {
                 $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
-                    Measure-Object | Select-Object -Property Count 
+                    Measure-Object | Select-Object -Property Count
                 switch ($thisMatch.Count) {
                     0 {
                         $RecordList.Add('DELETEME')
@@ -149,8 +151,8 @@ function New-OMPlusEPRRecordLite {
             }
             else {
                 $thisMatch = $PaperSizeDictionary | Where-Object { $_.PaperSizeRef -match ('^{0}$' -f [RegEx]::Escape( $PaperSize)) } |
-                    Measure-Object | Select-Object -Property Count 
-                    
+                    Measure-Object | Select-Object -Property Count
+
 
                 switch ($thisMatch.Count) {
                     0 {
@@ -180,8 +182,8 @@ function New-OMPlusEPRRecordLite {
             }
             else {
                 $thisMatch = $MediaTypeDictionary | Where-Object { $_.MediaTypeRef -match ('^{0}$' -f [RegEx]::Escape( $MediaType) ) } |
-                    Measure-Object | Select-Object -Property Count 
-                    
+                    Measure-Object | Select-Object -Property Count
+
                 switch ($thisMatch.Count) {
                     0 {
                         $RecordList.Add('DELETEME')

@@ -239,10 +239,10 @@ function New-OMPlusPrinter {
         [Alias('filesometimes')]
         [switch]$InsertMissingFF,
 
-        [parameter()]
+        [parameter(ValueFromPipelineByPropertyName)]
         [switch]$IsTesting,
 
-        [parameter()]
+        [parameter(ValueFromPipelineByPropertyName)]
         [switch]$IsFullTesting
     )
 
@@ -296,12 +296,12 @@ function New-OMPlusPrinter {
         $null = $ArgString.Add( ('-p{0}' -f $PrinterName) )
         if ($LPRPort) {
             $null = $ArgString.Add( ('-v{0}!{1}' -f $ipaddress, $LPRPort) )
+            $null = $ArgString.Add( '-omode="netprint"' )
         }
         else {
             $null = $ArgString.Add( ('-v{0}!{1}' -f $IPAddress, $TCPPort))
+            $null = $ArgString.Add( ('-omode="{0}"' -f $Mode))
         }
-
-        $null = $ArgString.Add( ('-omode="{0}"' -f $Mode))
 
         foreach ($Parameter in $PSBoundParameters.Keys) {
             switch ($Parameter) {
