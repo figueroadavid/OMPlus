@@ -122,19 +122,16 @@ function New-OMPlusSampleBulkImportFile {
             default { $ParameterSet.AddRange($OptionalParameter)}
         }
     }
-    $Tab = "`t"
-    $CRLF = "`r`n"
-
     if ($IncludeComments) {
         $OutputHash = [ordered]@{}
-        $ParameterSet | ForEach-Object { 
+        $ParameterSet | ForEach-Object {
             $null = $OutputHash.Add($_, $CommentsTable.$_)
         }
         $OutputPSCO = [pscustomobject]$OutputHash
-        $OutputPSCO | Export-CSV -Path $FilePath -Delimiter $Delimiter -NoTypeInformation 
+        $OutputPSCO | Export-CSV -Path $FilePath -Delimiter $Delimiter -NoTypeInformation
     }
     else {
         $ParameterSet -join ',' | Out-File -FilePath $FilePath
     }
-    
+
 }
