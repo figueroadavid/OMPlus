@@ -14,6 +14,21 @@ function New-OMPlusSampleBulkImportFile {
         }
         PS C:\> New-OMPlusSampleBulkImportFile @BIFSplat
         Explanation of what the example does
+    .PARAMETER FilePath
+        The output location for the sample file
+    .PARAMETER Delimiter
+        The delimiter used for the CSV file, it defaults to a comma (,)
+    .PARAMETER PortType
+        This differentiates between TCP and LPR type printing, the default is TCPPort
+    .PARAMETER OptionalParameter
+        This is a list of the optional parameters usable for the New-OMPlusPrinter and New-OMPlusBulkImport.
+            'Comment', 'Notes', 'DoNotValidate', 'PurgeTime', 'PageLimit', 'SupportNotes',
+            'WriteTimeout', 'TranslationTable', 'DriverType', 'PCAPPath', 'UserFilterPath',
+            'Filter2', 'Filter3', 'CPSMetering', 'InsertMissingFF', 'FormType', 'LFtoCRLF',
+            'CopyBreak', 'FileBreak', 'Banner', 'HasInternalWebServer', 'CustomURL', 'ForceWebServer', 'IsTesting'
+    .PARAMETER IncludeComments
+        This switch causes the function to include another column that includes comments about the optional parameters
+
     .INPUTS
         Inputs (if any)
     .OUTPUTS
@@ -110,7 +125,7 @@ function New-OMPlusSampleBulkImportFile {
         foreach ($Parameter in $ParameterSet) {
             $FileOutput.Add($Parameter, $CommentsTable.$Parameter)
         }
-        $FileOutput | Export-CSV -FilePath $FilePath -Delimiter $Delimiter
+        $FileOutput | Export-CSV -Path $FilePath -Delimiter $Delimiter -NoTypeInformation
     }
     else {
         $ParameterSet -join $Delimiter | Out-File -FilePath $FilePath
