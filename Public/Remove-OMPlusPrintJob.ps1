@@ -172,7 +172,6 @@ function Remove-OMPlusPrintJob {
                         $ProcSplat = @{
                             FilePath        = $dccResetPath
                             WindowStyle     = 'Hidden'
-                            Verb            = 'RunAs'
                             Wait            = $true
                         }
                         if ($ResetSNMP -or $ResetLock -or $ResetToInactive -or $ResetActive ) {
