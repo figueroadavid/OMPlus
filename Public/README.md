@@ -8,58 +8,33 @@ The module is written to provide a powershell friendly wrapper for the various b
 Here are the base functions provided
 
 - #### [`Enable-OMPlusPrinter`](#enable-omplusprinter)
-
-  - ##### [Parameters](#parameters)
-  - ##### [Example](#example)
-
+-
 - #### [`Disable-OMPlusPrinter`](#disable-omplusprinter)
 
-  - ##### [Parameters](#parameters-1)
-  - ##### [Example](#example-1)
-
-- #### [`Get-OMPlusDriverNames`](#get-omplusdrivernames)
-    - ###### [Example](#example-2)
+  - #### [`Get-OMPlusDriverNames`](#get-omplusdrivernames)
 
 - #### [`Get-OMPlusPrinterConfiguration`](#get-omplusprinterconfiguration)
 
-    - ###### [Parameters](#parameters-2)
-
-    - ###### [Example](#example-3)
 - #### [`Get-OMPlusPrinterList`](#get-omplusprinterlist)
 
-    - ###### [Example](#example-4)
 - #### [`New-OMPlusBulkImport`](#new-omplusbulkimport)
--
-    - ###### [Parameters](#parameters-3)
 
-    - ###### [Example](#example-5)
 - #### [`New-OMPlusEPRRecordLite`](#new-ompluseprrecordlite)
 
-    - ###### [Parameters](#parameters-4)
 - #### [`New-OMPlusPrinter`](#new-omplusprinter)
 
-  - ###### [Parameters](#parameters-5)
-
-  - ###### [Example](#example-6)
 - #### [`New-OMPlusSampleBulkImportFile`](#new-omplussamplebulkimportfile)
 
-  - ###### [Parameters](#parameters-5)
-
-  - ###### [Example](#example-7)
 - #### [`Remove-OMPlusPrinter`](#remove-omplusprinter)
 
-  - ###### [Parameters](#parameters-6)
-
-  - ###### [Example](#example-7)
 - #### [`Remove-OMPlusPrintJob`](#remove-omplusprintjob)
-
-  - ###### [Parameters](#parameters-7)
-
-  - ###### [Examples](#examples-8)
 
 - #### [`Set-OMPlusPrinter`](#set-omplusprinter)
 
 ---
+
+## Functions
+
 ### `Enable-OMPlusPrinter`
 
 Enables a previously disabled printer in OMPlus.
@@ -77,6 +52,7 @@ WARNING: Printer: PRINTER03 is not a valid printer for this system; skipping
 ```
 
 ### `Disable-OMPlusPrinter`
+
 Disables a printer in OMPlus
 
 ##### _Parameters_
@@ -90,7 +66,6 @@ Disables a printer in OMPlus
 PS C:\> Enable-OMPlusPrinter -PrinterName PRINTER01, PRINTER02, PRINTER03
 WARNING: Printer: PRINTER03 is not a valid printer for this system; skipping
 ```
-
 
 ### `Get-OMPlusDriverNames`
 
