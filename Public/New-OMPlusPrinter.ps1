@@ -356,7 +356,7 @@ function New-OMPlusPrinter {
                     elseif ($DoNotValidate) {
                         $Message = 'Adding a http URL address for the webserver, since DoNotValidate was set'
                         Write-Warning -Message $Message
-                        $null = $ArgString.Add( ('-ourl="http://{1}"' -f $ipaddress) )
+                        $null = $ArgString.Add( ('-ourl="http://{0}"' -f $ipaddress) )
                     }
                     else {
                         if (Test-Port -ComputerName $ipaddress -TCPPort 80 -TimeoutInMs 1000) {
@@ -365,12 +365,12 @@ function New-OMPlusPrinter {
                         }
                         elseif (Test-Port -ComputerName $ipaddress -TCPPort 443 -TimeoutInMs 1000) {
                             Write-Verbose -Message 'Found https port, adding URL'
-                            $null = $ArgString.Add( ('-ourl="https://{1}"' -f $ipaddress) )
+                            $null = $ArgString.Add( ('-ourl="https://{0}"' -f $ipaddress) )
                         }
                         elseif ($ForceWebServer) {
                             $Message = 'Forcing a http URL address for the webserver, currently it appears to be offline'
                             Write-Warning -Message $Message
-                            $null = $ArgString.Add( ('-ourl="http://{1}"' -f $ipaddress) )
+                            $null = $ArgString.Add( ('-ourl="http://{0}"' -f $ipaddress) )
                         }
                         else {
                             $Message = 'Unable to locate a webserver on port 80 or 443 for {0}, not setting this parameter' -f $PrinterName
