@@ -1,5 +1,9 @@
 # OMPlus
 
+<!--
+![OMPlusLogo](https://www.plustechnologies.com/wp-content/uploads/2015/01/logo-plustechnologies.png)
+-->
+
 Wrapper module for [OMPlus for Windows](https://www.plustechnologies.com)
 
 The module is written to provide a powershell friendly wrapper for the various binary utilities for OMplus on Windows.
