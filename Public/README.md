@@ -75,15 +75,19 @@ Reads and returns the list of driver names from the `types.conf` file in OMPlus
 
 ```powershell
 PS C:\> Get-OMPlusDriverNames
-DellOPDPCL5
-XeroxUPDPS
-LexUPDv2
-LexUPDv2XL
-LexUPDv2PS3
-XeroxUPDPCL6
-HPUPD6
-HPUPD5
-RICOHPCL6
+Driver                             Display
+------                             -------
+ZDesignerAM400                     ZDesigner ZM400 200 dpi (ZPL)
+HPUPD6                             HP Universal Printing PCL 6
+LexUPDv2                           Lexmark Universal v2
+DellOPDPCL5                        Dell Open Print Driver (PCL 5)
+RICOHPCL6                          RICOH PCL6 UniversalDriver V4.14
+HPUPD5                             HP Universal Printing PCL 5
+Zebra2.5x4                         ZDesigner ZM400 200 dpi (ZPL)
+LexUPDv2PS3                        Lexmark Universal v2 PS3
+LexUPDv2XL                         Lexmark Universal v2 XL
+XeroxUPDPS                         Xerox Global Print Driver PS
+XeroxUPDPCL6                       Xerox Global Print Driver PCL6
 ```
 
 ### `Get-OMPlusPrinterConfiguration`
