@@ -3,19 +3,24 @@ function Get-OMPLusDriverNames {
     .SYNOPSIS
         Retrieves the list of valid driver types for OMPlus
     .DESCRIPTION
-        It locates the default installation path for OMPlus, and retrieves the type.conf.
+        It locates the default installation path for OMPlus, and retrieves the OM_EPS_WIN_Queues.csv file.
         It then searches for all of the various types and returns the list of those types.
     .EXAMPLE
         PS C:\> Get-OMPlusDriverNames
-        DellOPDPCL5
-        XeroxUPDPS
-        LexUPDv2
-        LexUPDv2XL
-        LexUPDv2PS3
-        XeroxUPDPCL6
-        HPUPD6
-        HPUPD5
-        RICOHPCL6
+        Driver                                                                   Display
+        ------                                                                   -------
+        ZDesignerAM400                                                           ZDesigner ZM400 200 dpi (ZPL)
+        HPUPD6                                                                   HP Universal Printing PCL 6
+        LexUPDv2                                                                 Lexmark Universal v2
+        DellOPDPCL5                                                              Dell Open Print Driver (PCL 5)
+        RICOHPCL6                                                                RICOH PCL6 UniversalDriver V4.14
+        HPUPD5                                                                   HP Universal Printing PCL 5
+        Zebra2.5x4                                                               ZDesigner ZM400 200 dpi (ZPL)
+        LexUPDv2PS3                                                              Lexmark Universal v2 PS3
+        LexUPDv2XL                                                               Lexmark Universal v2 XL
+        XeroxUPDPS                                                               Xerox Global Print Driver PS
+        XeroxUPDPCL6                                                             Xerox Global Print Driver PCL6
+
     .INPUTS
         none
     .OUTPUTS
@@ -25,13 +30,16 @@ function Get-OMPLusDriverNames {
     #>
     [CmdletBinding()]
     param()
-    $XMLPath = [system.io.path]::combine($Global:OMHOMEPath, 'system','types.conf')
-    if (Test-Path -Path $XMLPath) {
-    $XML = New-Object -TypeName XML
-    $XML.Load($XMLPath)
-    Select-XML -Xml $XML -XPath '//PTYPE' |
-        Select-Object -ExpandProperty Node |
-        Select-Object -ExpandProperty Name
+
+    $CSVPath = [system.io.path]::combine($Global:OMHOMEPath, 'system','OM_EPS_WIN_Queues.csv')
+    if (Test-Path -Path $CSVPath) {
+        $QueueTypes = Import-Csv -Path D:\Plustech\OMPlus\Server\system\OM_EPS_WIN_Queues.csv -Header DriverName,DisplayName
+        for ($i = 1; $i -le $QueueTypes.Count; $i++) {
+            [pscustomobject]@{
+                Driver  = $QueueTypes[$i].DriverName
+                Display = $QueueTypes[$i].DisplayName
+            }
+        }
     }
     else {
         throw 'Could not retrieve printer driver names'
