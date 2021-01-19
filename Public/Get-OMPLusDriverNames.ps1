@@ -33,7 +33,7 @@ function Get-OMPLusDriverNames {
 
     $CSVPath = [system.io.path]::combine($Global:OMHOMEPath, 'system','OM_EPS_WIN_Queues.csv')
     if (Test-Path -Path $CSVPath) {
-        $QueueTypes = Import-Csv -Path D:\Plustech\OMPlus\Server\system\OM_EPS_WIN_Queues.csv -Header DriverName,DisplayName
+        $QueueTypes = Import-Csv -Path $CSVPath -Header DriverName,DisplayName
         for ($i = 1; $i -le $QueueTypes.Count; $i++) {
             [pscustomobject]@{
                 Driver  = $QueueTypes[$i].DriverName
