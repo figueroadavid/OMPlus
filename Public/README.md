@@ -8,10 +8,10 @@ The module is written to provide a powershell friendly wrapper for the various b
 Here are the base functions provided
 
 - #### [`Enable-OMPlusPrinter`](#enable-omplusprinter)
--
+
 - #### [`Disable-OMPlusPrinter`](#disable-omplusprinter)
 
-  - #### [`Get-OMPlusDriverNames`](#get-omplusdrivernames)
+- #### [`Get-OMPlusDriverNames`](#get-omplusdrivernames)
 
 - #### [`Get-OMPlusPrinterConfiguration`](#get-omplusprinterconfiguration)
 
