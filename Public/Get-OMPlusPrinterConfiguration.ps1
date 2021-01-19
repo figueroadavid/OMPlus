@@ -6,7 +6,7 @@ function Get-OMPlusPrinterConfiguration {
         The utility reads the configuration file from the printer directory and converts the information
         into a PSCustomObject.
     .EXAMPLE
-        PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01,Printer02
+        PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01
 
         Printer          : Printer01
         Mode             : termserv
