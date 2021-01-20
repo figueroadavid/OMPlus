@@ -13,6 +13,6 @@ $Global:OMHOMEPath          = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechno
 $GLobal:OMPlusPrinterPath   = [System.IO.Path]::Combine($Global:OMHOMEPath, 'printers')
 $Global:BinPath             = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
 $Global:OMPLusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
-$Global:ValidTypes          = Get-OMPLusDriverNames
+$Global:ValidTypes          = Get-OMPLusDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 $Global:CRLF                = [Environment]::NewLine
 $Global:OMPlusServerFQDN    = [system.net.dns]::GetHostByName($env:COMPUTERNAME).hostname
