@@ -650,7 +650,7 @@ else {
             [string]$Model,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [ValidateSet('pipe','windows','termserv','netprint','ipp','telnet','alttelnet',
+            [ValidateSet('termserv','netprint','pipe','windows','ipp','telnet','alttelnet',
                          'ftp','web','pager','fax','email','system','omplus','lpplus','directory',
                          'reptdist','ecivprinter','Virtual','scsi','parallel','serial')]
             [string]$Mode = 'termserv',
