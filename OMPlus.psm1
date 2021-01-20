@@ -11,7 +11,8 @@ Get-ChildItem -Path $PSScriptRoot\Public -File -Filter *.ps1 | Where-Object full
 
 $Global:OMHOMEPath          = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechnologies\OMPlusServer' -Name OMHOMEPath).OMHOMEPath
 $GLobal:OMPlusPrinterPath   = [System.IO.Path]::Combine($Global:OMHOMEPath, 'printers')
-$Global:BinPath             = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
+$Global:OMPlusBinPath       = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
+$Global:OMPlusFormsPath     = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'forms')
 $Global:OMPLusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
 $Global:ValidTypes          = Get-OMPLusDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 $Global:CRLF                = [Environment]::NewLine
