@@ -17,7 +17,7 @@ function Get-OMPlusPrinterList {
 
         Retrieves the list of printers in the directory
     .EXAMPLE
-        PS C:\> Get-OMPlusPrinterList -MatchPattern printer*
+        PS C:\> Get-OMPlusPrinterList -Filter printer*
         Printer01
         Printer02
         Printer03
