@@ -206,7 +206,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [switch]$ForceWebServer,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [ValidateSet('pipe','windows','termserv','netprint','ipp','telnet','alttelnet',
+            [ValidateSet('termserv','netprint','pipe','windows','ipp','telnet','alttelnet',
                          'ftp','web','pager','fax','email','system','omplus','lpplus','directory',
                          'reptdist','ecivprinter','Virtual','scsi','parallel','serial')]
             [string]$Mode = 'termserv',
@@ -344,7 +344,6 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         }
 
         process {
-
             Write-Verbose -Message 'Begin building command line string for lpadmin'
             $ArgString = New-Object -TypeName System.Collections.Generic.List[string]
             $null = $ArgString.Add( ('-p{0}' -f $PrinterName) )
@@ -476,7 +475,7 @@ else {
                 Notes 					= 'Test Notes'
                 SupportNotes 			= 'Support Notes'
                 WriteTimeout 			= 60
-                Model 				= 'HPUPD5'
+                Model 				    = 'HPUPD5'
                 Mode 					= 'termserv'
                 FormType 				= 'Letter'
                 PCAPPath 				= 'c:\temp\test.pcap'
@@ -748,7 +747,6 @@ else {
         }
 
         process {
-
             Write-Verbose -Message 'Begin building command line string for lpadmin'
             $ArgString = New-Object -TypeName System.Collections.Generic.List[string]
             $null = $ArgString.Add( ('-p{0}' -f $PrinterName) )
@@ -771,7 +769,7 @@ else {
                     'SupportNotes'      { $null = $ArgString.Add( ('-osupport="{0}"' -f $SupportNotes));            break}
                     'WriteTimeout'      { $null = $ArgString.add( ('-owritetime={0}' -f $WriteTimeout.ToString())); break}
                     'TranslationTable'  { $null = $ArgString.Add( ('-otrantable="{0}"' -f $TranslationTable));      break}
-                    'Model'        { $null = $ArgString.Add(  '-oPT{0}' -f $Model);                       break}
+                    'Model'             { $null = $ArgString.Add( ('-oPT{0}' -f $Model));                           break}
                     'PCAPPath'          { $null = $ArgString.Add( ('-oPcap="{0}"' -f $PCAPPath));                   break}
                     'UserFilterPath'    { $null = $ArgString.Add( ('-ousrfilter="{0}"' -f $UserFilterPath));        break}
                     'Filter2'           { $null = $ArgString.add( ('-ofilter2="{0}"' -f $Filter2));                 break}
@@ -842,7 +840,7 @@ else {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $global:omhomepath, 'bin','lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $Global:OMPlusBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }
