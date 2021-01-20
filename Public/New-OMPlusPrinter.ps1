@@ -1,6 +1,4 @@
 if ($PSVersionTable.PSVersion.Major -ge 5) {
-
-
     function New-OMPlusPrinter {
         <#
         .SYNOPSIS
@@ -21,7 +19,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 Notes 					= 'Test Notes'
                 SupportNotes 			= 'Support Notes'
                 WriteTimeout 			= 60
-                DriverType 				= 'HPUPD5'
+                Model 				    = 'HPUPD5'
                 Mode 					= 'termserv'
                 FormType 				= 'Letter'
                 PCAPPath 				= 'c:\temp\test.pcap'
@@ -64,19 +62,20 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .PARAMETER IPAddress
             This is the ip address of the printer that will be created.  The script was built around IPv4, but
             there is nothing in the script to prevent it from using IPv6 (if lpadmin.exe supports it)
+            The script checks if the passed value is a legitimate IP Address.  If it is not, then it checks if the supplied
+            value is a resolvable name, and it throws an error if it is a name and is not resolvable.
         .PARAMETER Port
             This is the TCP Port to use for printing on the newly created printer.
             It defaults to standard TCP/IP printing on port 9100
         .PARAMETER LPRPort
             This is the queue name used for LPR/LPD printers
         .PARAMETER Comment
-            This is the optional comment for the printer.  This version of the script is configured for
-            standard comments for Harris Health Systems.
+            This is the optional comment for the printer.
         .PARAMETER HasInternalWebServer
             This is used to flag the printer as having a supporting web page.
             If a CustomURL is not supplied, the script will test for port 80 (http://<ipaddress>) and if that fails,
             it will attempt port 443 (https://<ipaddress>), and if that fails, a warning is written and nothing is added for it.
-            However, if ForceWebServer is specified, it will add it as http even though the port is not
+            However, if -ForceWebServer is specified, it will add it as http even though the port is not
             responding when the script is run.
         .PARAMETER CustomURL
             If the HasInternalWebServer switch is used, and this parameter is provided, this will be inserted as
@@ -85,8 +84,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             If the HasInternalWebServer switch is used and the print server is down/not responding, and this switch
             is used, the printer will be configured with a URL of http://<ipaddress> despite failing validation.
         .PARAMETER PurgeTime
-            This is the length of time a document is held before being purged.
-            This is specified in seconds.
+            This is the length of time (in seconds) a document is held before being purged.
         .PARAMETER PageLimit
             Specified the maximum number of pages that will be printed in a single job
         .PARAMETER Notes
@@ -99,10 +97,9 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             Sets the amount of time that a print job must complete in before it is terminated
         .PARAMETER TranslationTable
             Sets a different translation table for the print jobs
-        .PARAMETER DriverType
-            Selects the correct type of driver for the printer.  The list of drivers can be obtained using the
-            Get-OMPlusDriverNames function.  This script was written for Powershell 4.  Future versions will
-            use ArgumentCompleters to pre-supply the available driver names.
+        .PARAMETER Model
+            Selects the correct type/model of driver for the printer.  The list of drivers can be obtained using the
+            Get-OMPlusDriverNames function.
         .PARAMETER Mode
             Selects the correct print mode for the printer. Most printers use the default value of 'termserv'
             The complete list is:
@@ -144,6 +141,9 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .PARAMETER IsTesting
             Used to test the output of the script.  It will generate the command line and output it, but not
             actually execute it.
+        .PARAMETER IsForEpic
+            This converts printer names to upper case and replaces any spaces with hyphens.  This helps the name
+            to conform to Epic requirements.  It is defaulted to $true
         #>
         [cmdletbinding()]
         param(
@@ -151,7 +151,23 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [string]$PrinterName,
 
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-            [IPAddress]$IPAddress,
+            [ValidateScript({
+                if ($_ -is [ipaddress]) {
+                    $true
+                }
+                else {
+                    try {
+                        $null = [system.net.dns]::GetHostByName($_)
+                        $true
+                    }
+                    catch {
+                        $Message = 'Could not resolve the ip address for {0}' -f $_
+                        Write-Warning -Message $Message
+                        $false
+                    }
+                }
+            })]
+            [string]$IPAddress,
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateRange(0,65535)]
@@ -159,6 +175,23 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
             [parameter(ValueFromPipelineByPropertyName)]
             [string]$LPRPort,
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [ArgumentCompleter({
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                    Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                    Where-Object { $_ -like "$WordToComplete*"} |
+                    Sort-Object |
+                    Foreach-Object {
+                        [System.Management.Automation.CompletionResult]::new(
+                            $_,
+                            $_,
+                            [System.Management.Automation.CompletionResultType]::ParameterValue,
+                            ('Driver Type: {0}' -f $_ )
+                        )
+                    }
+            })]
+            [string]$Model,
 
             [parameter(ValueFromPipelineByPropertyName)]
             [string]$Comment,
@@ -171,6 +204,19 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
             [parameter(ValueFromPipelineByPropertyName)]
             [switch]$ForceWebServer,
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [ValidateSet('pipe','windows','termserv','netprint','ipp','telnet','alttelnet',
+                         'ftp','web','pager','fax','email','system','omplus','lpplus','directory',
+                         'reptdist','ecivprinter','Virtual','scsi','parallel','serial')]
+            [string]$Mode = 'termserv',
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [Alias('z')]
+            [switch]$DoNotValidate,
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [bool]$IsForEpic = $true,
 
             [parameter(ValueFromPipelineByPropertyName)]
             [int]$PurgeTime,
@@ -192,26 +238,19 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
-                Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                    Get-ChildItem -Path $Global:OMPlusFormsPath | Select-Object -ExpandProperty BaseName |
+                    Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
                         [System.Management.Automation.CompletionResult]::new(
                             $_,
                             $_,
                             [System.Management.Automation.CompletionResultType]::ParameterValue,
-                            ('Driver Type: {0}' -f $_ )
+                            ('FormType: {0}' -f $_ )
                         )
                     }
             })]
-            [string]$DriverType,
-
-            [parameter(ValueFromPipelineByPropertyName)]
-            [ValidateSet('pipe','windows','termserv','netprint','ipp','telnet','alttelnet',
-                         'ftp','web','pager','fax','email','system','omplus','lpplus','directory',
-                         'reptdist','ecivprinter','Virtual','scsi','parallel','serial')]
-            [string]$Mode = 'termserv',
-
-            [parameter(ValueFromPipelineByPropertyName)]
             [string]$FormType,
 
             [parameter(ValueFromPipelineByPropertyName)]
@@ -236,10 +275,6 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [bool]$Banner,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [Alias('z')]
-            [switch]$DoNotValidate,
-
-            [parameter(ValueFromPipelineByPropertyName)]
             [Alias('lfc')]
             [bool]$LFtoCRLF,
 
@@ -261,18 +296,22 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         )
 
         Begin {
-            if ($IsFullTesting) { $PSBoundParameters }
+            if ($IsFullTesting) {
+                $PSBoundParameters
+            }
 
-            $PrinterName = $PrinterName.ToUpper().Replace(' ', '-')
+            if ($IsForEpic) {
+                Write-Verbose -Message 'Set name to Upper case, and replace spaces with hyphens'
+                $PrinterName = $PrinterName.ToUpper().Replace(' ', '-')
+            }
 
-
-            if ($DriverType) {
-                if ($DriverType -in $Global:ValidTypes) {
-                    $Message = 'DriverType "{0}" is a valid type' -f $DriverType
+            if ($Model) {
+                if ($Model -in $Global:ValidTypes) {
+                    $Message = 'Model "{0}" is a valid type' -f $Model
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'DriverType "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $DriverType, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
                     throw $Message
                 }
             }
@@ -283,6 +322,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     Write-Warning -Message 'The Notes parameter contains a double-quote, replacing it with a single quote'
                 }
             }
+
             if ($SupportNotes) {
                 if ($SupportNotes.Contains('"')) {
                     $SupportNotes = $SupportNotes.Replace('"', ",")
@@ -327,7 +367,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     'SupportNotes'      { $null = $ArgString.Add( ('-osupport="{0}"' -f $SupportNotes));            break}
                     'WriteTimeout'      { $null = $ArgString.add( ('-owritetime={0}' -f $WriteTimeout.ToString())); break}
                     'TranslationTable'  { $null = $ArgString.Add( ('-otrantable="{0}"' -f $TranslationTable));      break}
-                    'DriverType'        { $null = $ArgString.Add(  '-oPT{0}' -f $DriverType);                       break}
+                    'Model'             { $null = $ArgString.Add( ('-oPT={0}' -f $Model));                           break}
                     'PCAPPath'          { $null = $ArgString.Add( ('-oPcap="{0}"' -f $PCAPPath));                   break}
                     'UserFilterPath'    { $null = $ArgString.Add( ('-ousrfilter="{0}"' -f $UserFilterPath));        break}
                     'Filter2'           { $null = $ArgString.add( ('-ofilter2="{0}"' -f $Filter2));                 break}
@@ -398,7 +438,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $global:omhomepath, 'bin','lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $Global:OMPlusBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }
@@ -436,7 +476,7 @@ else {
                 Notes 					= 'Test Notes'
                 SupportNotes 			= 'Support Notes'
                 WriteTimeout 			= 60
-                DriverType 				= 'HPUPD5'
+                Model 				= 'HPUPD5'
                 Mode 					= 'termserv'
                 FormType 				= 'Letter'
                 PCAPPath 				= 'c:\temp\test.pcap'
@@ -514,7 +554,7 @@ else {
             Sets the amount of time that a print job must complete in before it is terminated
         .PARAMETER TranslationTable
             Sets a different translation table for the print jobs
-        .PARAMETER DriverType
+        .PARAMETER Model
             Selects the correct type of driver for the printer.  The list of drivers can be obtained using the
             Get-OMPlusDriverNames function.  This script was written for Powershell 4.  Future versions will
             use ArgumentCompleters to pre-supply the available driver names.
@@ -606,8 +646,8 @@ else {
             [string]$TranslationTable,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [ValidateSet('DellOPDPCL5','HPUPD5','HPUPD6','LexUPDv2','LexUPDv2PS3','LexUPDv2XL','RICOHPCL6','XeroxUPDPCL6','XeroxUPDPS')]
-            [string]$DriverType,
+            [ValidateSet('DellOPDPCL5','HPUPD5','HPUPD6','LexUPDv2','LexUPDv2PS3','LexUPDv2XL','RICOHPCL6','XeroxUPDPCL6','XeroxUPDPS','ZDesignerAM400', 'Zebra2.5x4', 'ZebSmallPO')]
+            [string]$Model,
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateSet('pipe','windows','termserv','netprint','ipp','telnet','alttelnet',
@@ -670,13 +710,13 @@ else {
             $PrinterName = $PrinterName.ToUpper().Replace(' ', '-')
 
 
-            if ($DriverType) {
-                if ($DriverType -in $Global:ValidTypes) {
-                    $Message = 'DriverType "{0}" is a valid type' -f $DriverType
+            if ($Model) {
+                if ($Model -in $Global:ValidTypes) {
+                    $Message = 'Model "{0}" is a valid type' -f $Model
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'DriverType "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $DriverType, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
                     throw $Message
                 }
             }
@@ -731,7 +771,7 @@ else {
                     'SupportNotes'      { $null = $ArgString.Add( ('-osupport="{0}"' -f $SupportNotes));            break}
                     'WriteTimeout'      { $null = $ArgString.add( ('-owritetime={0}' -f $WriteTimeout.ToString())); break}
                     'TranslationTable'  { $null = $ArgString.Add( ('-otrantable="{0}"' -f $TranslationTable));      break}
-                    'DriverType'        { $null = $ArgString.Add(  '-oPT{0}' -f $DriverType);                       break}
+                    'Model'        { $null = $ArgString.Add(  '-oPT{0}' -f $Model);                       break}
                     'PCAPPath'          { $null = $ArgString.Add( ('-oPcap="{0}"' -f $PCAPPath));                   break}
                     'UserFilterPath'    { $null = $ArgString.Add( ('-ousrfilter="{0}"' -f $UserFilterPath));        break}
                     'Filter2'           { $null = $ArgString.add( ('-ofilter2="{0}"' -f $Filter2));                 break}
