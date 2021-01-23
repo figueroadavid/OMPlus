@@ -41,8 +41,10 @@ Enables a previously disabled printer in OMPlus.
 
 ##### _Parameters_
 
-- `-PrinterName`: Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped
-- `-ShowProgress`: Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-PrinterName` | Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped |
+| `-ShowProgress` | Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
 
 ##### _Example_
 
@@ -57,8 +59,10 @@ Disables a printer in OMPlus
 
 ##### _Parameters_
 
-- `-PrinterName`: Accepts 1 or more printer names to disable; if a printer does not exist, then a warning is written, and the printer is skipped
-- `-ShowProgress`: Writes a progress bar to show the progress of the cmdlet; this is useful when disabling a large number of printers
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-PrinterName` | Accepts 1 or more printer names to disable; if a printer does not exist, then a warning is written, and the printer is skipped |
+| `-ShowProgress` | Writes a progress bar to show the progress of the cmdlet; this is useful when disabling a large number of printers |
 
 ##### _Example_
 
@@ -93,9 +97,14 @@ XeroxUPDPCL6                       Xerox Global Print Driver PCL6
 ### `Get-OMPlusPrinterConfiguration`
 
 Reads the configuration of a printer in OMPlus and returns the contents of the configuration file as a PSCustomObject
+
 ##### _Parameters_
-- `-PrinterName`: Accepts 1 or more printer names from which to retrieve the configuration
-- `-Property`: Accepts a list of 1 or more property names to return in the PSCustomObject
+
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-PrinterName` | Accepts 1 or more printer names from which to retrieve the configuration |
+| `-Property` | Accepts a list of 1 or more property names to return in the PSCustomObject |
+
 ##### _Example_
 ```powershell
 PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01
@@ -174,8 +183,10 @@ MyPrint04
 Reads in a CSV file of printers and feeds them into the New-OMPlusPrinter function to create new OMPlus printers
 ##### _Parameters_
 
-- `-FilePath`: The path to the CSV file to read in
-- `-Delimter`: The character used to separate the fields, it defaults to a commma
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-FilePath` | The path to the CSV file to read in |
+| `-Delimter` | The character used to separate the fields, it defaults to a commma |
 
 ##### _Example_
 PS C:\> New-OMPlusBulkImport -FilePath c:\temp\omplusimport.csv -delimiter '|'
@@ -186,53 +197,56 @@ This is a work in progress.  It is designed to create a correctly formatted Epic
 
 ##### _Parameters_
 
-- `-ServerName`: The name of the server that will host the EPR Record; defaults to the current machine
-  - Having the correct servername isn't *critical* per-se; the OMPlus system will automatically update the record
-- `-EPRQueueName`: The name of the EPR Queue Name for the Record; there can be multiple EPRQueueNames per OMPlusQueueName
-- `-OMPLusQueueName`: the queue/destination name in OMPlus; there can be multiple _OMPLusQueueName_'s per _EPRQueueName_'s
-- `-DriverName`: the name of the driver used in the system; this name _is_ case-sensitive; this name comes from the _Types_ list in the OMPlus Administration tool
-- `-TrayName`: this is the name of the tray to use.  It must match the trays available in the `types.conf`.
-- `-DuplexOption`: this is the Duplex option setting in the _Epic Print Record_ tool; it comes from the `types.conf` file; it can be _None_ (which is blank), _Simplex_, _Horizontal_ (Short Edge), or _Vertical_ (Long Edge)
-- `-PaperSize`: this is the size of the paper; it also comes from the `types.conf` file
-- `-IsRx`: sets the flag if the EPR is designated for prescriptions, it defaults to 'n'; which is unchecked in the EPR tool
-- `-MediaType`: determines which media type the printer is using.  It defaults to 'none'
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-ServerName` | The name of the server that will host the EPR Record; defaults to the current machine; Having the correct servername isn't *critical* per-se; the OMPlus system will automatically update the record |
+| `-EPRQueueName`| The name of the EPR Queue Name for the Record; there can be multiple EPRQueueNames per OMPlusQueueName |
+| `-OMPLusQueueName`| the queue/destination name in OMPlus; there can be multiple _OMPLusQueueName_'s per _EPRQueueName_'s |
+| `-DriverName`| the name of the driver used in the system; this name _is_ case|sensitive; this name comes from the _Types_ list in the OMPlus Administration tool |
+| `-TrayName`| this is the name of the tray to use.  It must match the trays available in the `types.conf`. |
+| `-DuplexOption`| this is the Duplex option setting in the _Epic Print Record_ tool; it comes from the `types.conf` file; it can be _None_ (which is blank), _Simplex_, _Horizontal_ (Short Edge), or _Vertical_ (Long Edge) |
+| `-PaperSize`| this is the size of the paper; it also comes from the `types.conf` file |
+| `-IsRx`| sets the flag if the EPR is designated for prescriptions, it defaults to 'n'; which is unchecked in the EPR tool |
+| `-MediaType`| determines which media type the printer is using.  It defaults to 'none' |
 
-### `New-OMPlusPrinter`
+ ### `New-OMPlusPrinter`
 
 Creates a new OMPlus printer
 
 ##### _Parameters_
 
-- `-PrinterName`: The name of the printer to create
-- `-IPAddress`: The IP address of the printer; `lpadmin.exe` does not require an IP address depending on the printer type, but the vast majority of printers managed by OMPlus are on the network and do need IP Addresses.  The script validates the number is in the range of `0-65535`
-- `-TCPPort`: The TCP port used for the printer; it defaults to `9100`
-- `-LPRPort`: The name of the LPD/LPR queue; if this is used the script will replace the TCPPort with the LPRPort queue name
-- `-Comment`: This supplies the comment (`-ocmt`) parameter;
-- `-HasInternalWebServer`: This sets the _`Has Internal Web Server`_ flag for the printer; if _`CustomURL`_ is not supplied, the script tests for a web page on port `80`(`http`), and then on port `443`(`https`) if `80` does not respond; (`-ourl`)
-- `-CustomURL`: This is used with the _HasInternalWebServer_ to set the -ourl parameter, and must be used if the web page is not accessed by the IP address on a standard `http`(`80`) or `https`(`443`) port
-- `-ForceWebServer`: Used in combination with _HasInternalWebServer_ to set the `-ourl` port without verifying that the URL responds (http, https, custom)
-- `-PurgeTime`: Overrides the default purge time from the system for the printer; this value is in seconds (`-opurgetime`)
-- `-PageLimit`: Overrides the default page limit from the system for the printer (`-opagelimit`)
-- `-Notes`: This supplies the the Notes field (`-onoteinfo`)
-- `-SupportNotes`: Supplies the Support Notes field (`-osupport`)
-- `-WriteTimeout`: Overrides the default timeout value for print jobs for this printer (`-owritetimeout`)
-- `-TranslationTable`: Overrides the default translation table for the system for this printer (`-otrantrable`)
-- `-DriverType`: Sets the correct driver type; this script was written for Powershell 4; the administrator needs to first get the correct driver types to set the list for `[ValidateSet()]`; however, future versions will automatically prepopulate this list with ArgumentCompleters (`-oPT`)
-- `-Mode = 'termserv'`: Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)
-- `-FormType`: Overrides the default form type for the printer (`-oform`)
-- `-PCAPPath`: Enables the PCAP capture for the printer, and sets the file path for the capture file (`-oPcap`)
-- `-UserFilterPath`: Sets a user defined filter script for print jobs (`-ousrfilter`); the file must exist on the system
-- `-Filter2`: Sets a secondary user defined filter script for print jobs (`-ofilter2`); the file must exist on the system
-- `-Filter3`: Sets a secondary user defined filter script for print jobs (`-ofilter3`); the file must exist on the system
-- `-CPSMetering`: Overrides the default characters per second metering for printer (`-ometering`)
-- `-Banner`: If used, and set to \$true, then `-obanner` is used and banner pages are injected between print jobs, if set to $false, then `-onobanner` is used
-- `-DoNotValidate`: Sets the -z flag so that lpadmin does not try to verify the printer's existence
-- `-LFtoCRLF`: If used, and set to \$true, then `-olfc` is used and LF characters are converted to CRLF characters, if set to $false, then `-onolfc` is used
-- `-CopyBreak`: If used, and set to \$true, then `-ocopybreak` is used and page breaks are inserted between print jobs, and if set to $false `-onocopybreak` is used, and page breaks are removed from between print jobs
-- `-FileBreak`: If used, and set to \$true, then `-ofilebreak` is used and page breaks are inserted between files submitted, and if set to $false, then `-onofilebreak` is used and page breaks between files are removed
-- `-InsertMissingFF`: If used, then if form feeds are missing between jobs, then they are inserted (`-ofilesometimes`)
-- `-IsTesting`: if used, displays the generated command line without actually creating the printer
-- `-IsFullTesting`: if used, displays all the supplied parameters, and then displays the generated command line
+| Parameter Name  | Description |
+| --------------- | ----------- |
+| `-PrinterName`| The name of the printer to create|
+| `-IPAddress`| The IP address of the printer; `lpadmin.exe` does not require an IP address depending on the printer type, but the vast majority of printers managed by OMPlus are on the network and do need IP Addresses.  The script validates the number is in the range of `0-65535`|
+| `-TCPPort`| The TCP port used for the printer; it defaults to `9100`|
+| `-LPRPort`| The name of the LPD/LPR queue; if this is used the script will replace the TCPPort with the LPRPort queue name|
+| `-Comment`| This supplies the comment (`-ocmt`) parameter;|
+| `-HasInternalWebServer`| This sets the _`Has Internal Web Server`_ flag for the printer; if _`CustomURL`_ is not supplied, the script tests for a web page on port `80`(`http`), and then on port `443`(`https`) if `80` does not respond; (`-ourl`)|
+| `-CustomURL`| This is used with the _HasInternalWebServer_ to set the -ourl parameter, and must be used if the web page is not accessed by the IP address on a standard `http`(`80`) or `https`(`443`) port|
+| `-ForceWebServer`| Used in combination with _HasInternalWebServer_ to set the `-ourl` port without verifying that the URL responds (http, https, custom)|
+| `-PurgeTime`| Overrides the default purge time from the system for the printer; this value is in seconds (`-opurgetime`)|
+| `-PageLimit`| Overrides the default page limit from the system for the printer (`-opagelimit`)|
+| `-Notes`| This supplies the the Notes field (`-onoteinfo`)|
+| `-SupportNotes`| Supplies the Support Notes field (`-osupport`)|
+| `-WriteTimeout`| Overrides the default timeout value for print jobs for this printer (`-owritetimeout`)|
+| `-TranslationTable`| Overrides the default translation table for the system for this printer (`-otrantrable`)|
+| `-DriverType`| Sets the correct driver type; this script was written for Powershell 4; the administrator needs to first get the correct driver types to set the list for `[ValidateSet()]`; however, future versions will automatically prepopulate this list with ArgumentCompleters (`-oPT`)|
+| `-Mode = 'termserv'`| Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)|
+| `-FormType`| Overrides the default form type for the printer (`-oform`)|
+| `-PCAPPath`| Enables the PCAP capture for the printer, and sets the file path for the capture file (`-oPcap`)|
+| `-UserFilterPath`| Sets a user defined filter script for print jobs (`-ousrfilter`); the file must exist on the system|
+| `-Filter2`| Sets a secondary user defined filter script for print jobs (`-ofilter2`); the file must exist on the system|
+| `-Filter3`| Sets a secondary user defined filter script for print jobs (`-ofilter3`); the file must exist on the system|
+| `-CPSMetering`| Overrides the default characters per second metering for printer (`-ometering`)|
+| `-Banner`| If used, and set to \$true, then `-obanner` is used and banner pages are injected between print jobs, if set to $false, then `-onobanner` is used|
+| `-DoNotValidate`| Sets the -z flag so that lpadmin does not try to verify the printer's existence|
+| `-LFtoCRLF`| If used, and set to \$true, then `-olfc` is used and LF characters are converted to CRLF characters, if set to $false, then `-onolfc` is used|
+| `-CopyBreak`| If used, and set to \$true, then `-ocopybreak` is used and page breaks are inserted between print jobs, and if set to $false `-onocopybreak` is used, and page breaks are removed from between print jobs|
+| `-FileBreak`| If used, and set to \$true, then `-ofilebreak` is used and page breaks are inserted between files submitted, and if set to $false, then `-onofilebreak` is used and page breaks between files are removed|
+| `-InsertMissingFF`| If used, then if form feeds are missing between jobs, then they are inserted (`-ofilesometimes`)|
+| `-IsTesting`| if used, displays the generated command line without actually creating the printer|
+| `-IsFullTesting`| if used, displays all the supplied parameters, and then displays the generated command line|
 
 ##### _Example_
 
@@ -275,21 +289,23 @@ This creates a sample csv file that is appropriate to import into `New-OMPlusBul
 
 ##### _Parameters_
 
-- `-FilePath`: The output path for the sample file
-- `-Delimiter`: A single character delimiter for the output file; it defaults to a comma (`,`)
-- `-PortType`: Defaults to `TCPPort`, the other option is `LPRPort`
-- `-OptionalParameter`: A list of the available optional_Parameters_ to include in the output file;
-       * Options include:
-       <table>
-       <tr>
-              <td><pre>HasInternalWebServer<br>CustomURL<br>ForceWebServer<br>DriverType<br>DoNotValidate<br>PurgeTime</pre></td>
-              <td><pre>Comment<br>Notes<br>SupportNotes<br>UserFilterPath<br>Filter2<br>Filter3</pre></td>
-              <td><pre>PCAPpath<br>CPSMetering<br>InsertMissingFF<br>FormType<br>LFtoCRLF<br>CopyBreak</pre></td>
-              <td><pre>FileBreak<br>Banner<br>WriteTimeout<br>TranslationTable<br>PageLimit<br>IsTesting</pre></td>
-       </tr>
-       </table>
+| Parameter Name | Description |
+| -- | -- |
+| `-FilePath`| The output path for the sample file |
+| `-Delimiter`| A single character delimiter for the output file; it defaults to a comma (`,`) |
+| `-PortType`| Defaults to `TCPPort`, the other option is `LPRPort` |
+| `-IncludeComments` | This adds a series of comments for the optional _Parameters_ giving explanations to those _Parameters_ |
+| `-OptionalParameter`| A list of the available optional_Parameters_ to include in the output file; |
 
-- `-IncludeComments`: This adds a series of comments for the optional_Parameters_ giving explanations to those_Parameters_
+
+| Options |      |      |      |
+| ------- | ---- | ---- | ---- |
+| `HasInternalWebServer` | `Comment` | `PCAPpath` | `FileBreak` |
+| `CustomURL` | `Notes` | `CPSMetering` | `Banner` |
+| `ForceWebServer` | `SupportNotes` | `InsertMissingFF` | `WriteTimeout` |
+| `DriverType` | `UserFilterPath` | `FormType` | `TranslationTable` |
+| `DoNotValidate` | `Filter2` | `LFtoCRLF` | `PageLimit` |
+| `PurgeTime` | `Filter3` | `CopyBreak` | `IsTesting` |
 
 ##### _Example_
 
@@ -315,8 +331,9 @@ PS C:\> @SampleSplat = @{
        IncludeComments      = $false
 }
 
-#Contents of the file
 PS C:\> New-OMPlusSampleBulkImportFile @SampleSplat
+
+#Contents of the file
 PrinterName,IPAddress,TCPPort,HasInternalWebServer,ForceWebServer,DriverType,DoNotValidate,Comment,IsTesting
 ```
 
@@ -326,7 +343,9 @@ This uses `lpadmin.exe` to delete the given printers by name; when the printers 
 
 ##### _Parameters_
 
-- `-PrinterName`: The list of printers to remove
+| Parameter Name | Description |
+| -- | -- |
+| `-PrinterName` | The list of printers to remove |
 
 ##### _Example_
 
@@ -348,20 +367,19 @@ This function deletes print jobs that exists in the system. It has 3 modes of op
 
 ##### _Parameters_
 
-- `-RIDNumber`: [by RID number] The RIDNumber(s) of the print jobs to delete
-- `-ImmediatePurge`: [by RID number] adds the flag to automatically purges the jobs
+| Parameter Name | Description |
+| -- | -- |
+|  `-RIDNumber` | [by RID number] The RIDNumber(s) of the print jobs to delete |
+|  `-ImmediatePurge` | [by RID number] adds the flag to automatically purges the jobs |
+|  `-JobAgeInMinutes` | [by Job Age] Jobs older than this number of minutes in age are cancelled |
+|  `-PrinterName` | [by the printer] This printer is reset, cancelling the jobs on this printer and disabling the printer |
+|  `-ResetSNMP` | [by the printer] Adds the flag to reset the SNMP data |
+|  `-ResetLock` | [by the printer] Adds the flag to reset the lock data |
+|  `-ResetToInactive` | [by the printer] Adds the flag to reset the printer, and set it to disabled |
+|  `-ResetActive` | [by the printer] Adds the flag to reset the printer, and set it back to enabled |
+|  `-Status` | [by Job Status] The jobs with this status are cancelled |
 
-- `-JobAgeInMinutes`: [by Job Age] Jobs older than this number of minutes in age are cancelled
-
-- `-PrinterName`: [by the printer] This printer is reset, cancelling the jobs on this printer and disabling the printer
-- `-ResetSNMP`: [by the printer] Adds the flag to reset the SNMP data
-- `-ResetLock`: [by the printer] Adds the flag to reset the lock data
-- `-ResetToInactive`: [by the printer] Adds the flag to reset the printer, and set it to disabled
-- `-ResetActive`: [by the printer] Adds the flag to reset the printer, and set it back to enabled
-
-- `-Status`: [by Job Status] The jobs with this status are cancelled
-
-##### _Example_s
+##### _Examples_
 
 ```powershell
 PS C:\> Remove-OMPlusPrintJob -RIDNumber RID35332
