@@ -1,3 +1,24 @@
+<style>
+    .col2table th:first-of-type {
+        width: 30%;
+    }
+    .col2table th:nth-of-type(2) {
+        width: 70%;
+    }
+
+    .col4table th {
+        width: 25%;
+        colspan: 4;
+    }
+
+    tr:nth-of-type(2n) {
+        background-color: #efefef;
+    }
+
+    th {
+        background-color: #bbbbbb;
+    }
+</style>
 # OMPlus Delivery Manager
 
 ![OMPlusLogo](https://www.plustechnologies.com/wp-content/uploads/2015/01/logo-plustechnologies.png)
@@ -40,11 +61,14 @@ Here are the base functions provided
 Enables a previously disabled printer in OMPlus.
 
 ##### _Parameters_
+<div class="col2table">
 
 | Parameter Name  | Description |
 | --------------- | ----------- |
-| `-PrinterName` | Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped |
+| `-PrinterName`  | Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped |
 | `-ShowProgress` | Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
+
+</div>
 
 ##### _Example_
 
@@ -59,10 +83,14 @@ Disables a printer in OMPlus
 
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name  | Description |
 | --------------- | ----------- |
 | `-PrinterName` | Accepts 1 or more printer names to disable; if a printer does not exist, then a warning is written, and the printer is skipped |
 | `-ShowProgress` | Writes a progress bar to show the progress of the cmdlet; this is useful when disabling a large number of printers |
+
+</div>
 
 ##### _Example_
 
@@ -100,11 +128,14 @@ Reads the configuration of a printer in OMPlus and returns the contents of the c
 
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name  | Description |
 | --------------- | ----------- |
 | `-PrinterName` | Accepts 1 or more printer names from which to retrieve the configuration |
 | `-Property` | Accepts a list of 1 or more property names to return in the PSCustomObject |
 
+</div>
 ##### _Example_
 ```powershell
 PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01
@@ -183,19 +214,28 @@ MyPrint04
 Reads in a CSV file of printers and feeds them into the New-OMPlusPrinter function to create new OMPlus printers
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name  | Description |
 | --------------- | ----------- |
 | `-FilePath` | The path to the CSV file to read in |
 | `-Delimter` | The character used to separate the fields, it defaults to a commma |
 
+</div>
+
 ##### _Example_
+
+```powershell
 PS C:\> New-OMPlusBulkImport -FilePath c:\temp\omplusimport.csv -delimiter '|'
+```
 
 ### `New-OMPlusEPRRecordLite`
 
 This is a work in progress.  It is designed to create a correctly formatted Epic Print Record for the `eps_map` file.
 
 ##### _Parameters_
+
+<div class="col2table">
 
 | Parameter Name  | Description |
 | --------------- | ----------- |
@@ -209,11 +249,15 @@ This is a work in progress.  It is designed to create a correctly formatted Epic
 | `-IsRx`| sets the flag if the EPR is designated for prescriptions, it defaults to 'n'; which is unchecked in the EPR tool |
 | `-MediaType`| determines which media type the printer is using.  It defaults to 'none' |
 
+</div>
+
  ### `New-OMPlusPrinter`
 
 Creates a new OMPlus printer
 
 ##### _Parameters_
+
+<div class="col2table">
 
 | Parameter Name  | Description |
 | --------------- | ----------- |
@@ -247,6 +291,8 @@ Creates a new OMPlus printer
 | `-InsertMissingFF`| If used, then if form feeds are missing between jobs, then they are inserted (`-ofilesometimes`)|
 | `-IsTesting`| if used, displays the generated command line without actually creating the printer|
 | `-IsFullTesting`| if used, displays all the supplied parameters, and then displays the generated command line|
+
+</div>
 
 ##### _Example_
 
@@ -289,23 +335,29 @@ This creates a sample csv file that is appropriate to import into `New-OMPlusBul
 
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name | Description |
 | -- | -- |
-| `-FilePath`| The output path for the sample file |
-| `-Delimiter`| A single character delimiter for the output file; it defaults to a comma (`,`) |
-| `-PortType`| Defaults to `TCPPort`, the other option is `LPRPort` |
+| `-FilePath` | The output path for the sample file |
+| `-Delimiter` | A single character delimiter for the output file; it defaults to a comma (`,`) |
+| `-PortType` | Defaults to `TCPPort`, the other option is `LPRPort` |
 | `-IncludeComments` | This adds a series of comments for the optional _Parameters_ giving explanations to those _Parameters_ |
-| `-OptionalParameter`| A list of the available optional_Parameters_ to include in the output file; |
+| `-OptionalParameter` | A list of the available optional_Parameters_ to include in the output file; |
 
+</div>
+<div class="col4table">
 
-| Options |      |      |      |
-| ------- | ---- | ---- | ---- |
-| `HasInternalWebServer` | `Comment` | `PCAPpath` | `FileBreak` |
-| `CustomURL` | `Notes` | `CPSMetering` | `Banner` |
-| `ForceWebServer` | `SupportNotes` | `InsertMissingFF` | `WriteTimeout` |
-| `DriverType` | `UserFilterPath` | `FormType` | `TranslationTable` |
-| `DoNotValidate` | `Filter2` | `LFtoCRLF` | `PageLimit` |
-| `PurgeTime` | `Filter3` | `CopyBreak` | `IsTesting` |
+| Options                |                  |                   |                    |
+| :------                | ----             | ----              | ----               |
+| `HasInternalWebServer` | `Comment`        | `PCAPpath`        | `FileBreak`        |
+| `CustomURL`            | `Notes`          | `CPSMetering`     | `Banner`           |
+| `ForceWebServer`       | `SupportNotes`   | `InsertMissingFF` | `WriteTimeout`     |
+| `DriverType`           | `UserFilterPath` | `FormType`        | `TranslationTable` |
+| `DoNotValidate`        | `Filter2`        | `LFtoCRLF`        | `PageLimit`        |
+| `PurgeTime`            | `Filter3`        | `CopyBreak`       | `IsTesting`        |
+
+</div>
 
 ##### _Example_
 
@@ -321,8 +373,6 @@ PS C:\> New-OMPlusSampleBulkImportFile @SampleSplat
 #Contents of the file
 "PrinterName","IPAddress","TCPPort","HasInternalWebServer","ForceWebServer","DriverType","DoNotValidate","Comment","IsTesting"
 "Mandatory parameter; Name used to create the actual printer; spaces are not allowed","Mandatory parameter; IP address for the printer, or LPR/LPD print server","Mandatory parameter: The TCP port used for network communication, between 0 and 65535; the default is 9100","Optional parameter; Indicates that the printer has a built in web server; if a CustomURL is not supplied it will attempt to create a URL from http://<ipaddress> or https://<ipaddress> ","Optional parameter; Indicates that te default web server URL needs to be set even if neither http://<ipaddress> nor https://<ipaddress> respond ","Optional parameter; The DriverType for the printer; must be one of the supported ones from the system","Optional parameter; Tells lpadmin not to verify the printer before creating it (-z)","Optional parameter; Comment for the printer","Optional parameter; Causes the script to return the generated command line rather than execute it"
-
-
 
 PS C:\> @SampleSplat = @{
        FilePath             = 'c:\temp\OmplusSample.csv'
@@ -343,9 +393,13 @@ This uses `lpadmin.exe` to delete the given printers by name; when the printers 
 
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name | Description |
 | -- | -- |
 | `-PrinterName` | The list of printers to remove |
+
+</div>
 
 ##### _Example_
 
@@ -367,6 +421,8 @@ This function deletes print jobs that exists in the system. It has 3 modes of op
 
 ##### _Parameters_
 
+<div class="col2table">
+
 | Parameter Name | Description |
 | -- | -- |
 |  `-RIDNumber` | [by RID number] The RIDNumber(s) of the print jobs to delete |
@@ -378,6 +434,8 @@ This function deletes print jobs that exists in the system. It has 3 modes of op
 |  `-ResetToInactive` | [by the printer] Adds the flag to reset the printer, and set it to disabled |
 |  `-ResetActive` | [by the printer] Adds the flag to reset the printer, and set it back to enabled |
 |  `-Status` | [by Job Status] The jobs with this status are cancelled |
+
+</div>
 
 ##### _Examples_
 
