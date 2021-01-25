@@ -2,6 +2,20 @@ function Get-OMPlusTypeTable {
     [cmdletbinding()]
     param(
         [parameter(Mandatory)]
+        [ArgumentCompleter({
+            param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                Where-Object { $_ -like "$WordToComplete*"} |
+                Sort-Object |
+                Foreach-Object {
+                    [System.Management.Automation.CompletionResult]::new(
+                        $_,
+                        $_,
+                        [System.Management.Automation.CompletionResultType]::ParameterValue,
+                        ('Driver Type: {0}' -f $_ )
+                    )
+                }
+        })]
         [string]$DriverType,
 
         [parameter(Mandatory)]
