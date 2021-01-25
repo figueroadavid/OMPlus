@@ -6,7 +6,20 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .DESCRIPTION
             <work in progress>
         .EXAMPLE
-            PS C:\> New-OMPlusEPRRecordLite
+            PS C:\> $EPRSplat = @{
+                ServerName = 'server01.domain.local'
+                EPRQueueName    = 'PRINTER01'
+                OMPlusQueueName = 'PRINTER01'
+                DriverName      = 'DellOPDPCL5'
+                TrayName        = 'Tray 1'
+                DuplexOption    = 'Horizontal'
+                PaperSize       = 'Letter'
+                IsRX            = 'n'
+                MediaType       = 'Bond'
+            }
+            PS C:\> New-OMPlusEPRRecordLite @EPRSplat
+            server01.domain.local|PRINTER01|PRINTER01|DellOPDPCL5|!259|Horizontal|!1|n|!259
+
         .PARAMETER ServerName
             This is the fully qualified domain name of the server which will have the
             generated EPR record.
@@ -46,6 +59,8 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .PARAMETER MediaType
             This is the displayname of the media type used in the EPR Record.
             If no MediaType is provided, the generated EPR record will contain an empty field.
+        .PARAMETER Append
+            This switch tells the script to automatically append the record to the eps_map.
 
         .INPUTS
             [string]
@@ -157,7 +172,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         )
 
         process {
-            foreach ($Item in $EPRQueueName) {
+            $EPRRecordList = foreach ($Item in $EPRQueueName) {
                 $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
                 $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
                 $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
@@ -263,6 +278,10 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 }
                 $RecordList -join '|' -replace 'DELETEME'
             }
+        }
+
+        end {
+            if ($Append)
         }
     }
 }
