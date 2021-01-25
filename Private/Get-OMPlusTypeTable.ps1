@@ -18,9 +18,9 @@ function Get-OMPlusTypeTable {
         })]
         [string]$DriverType,
 
-        [parameter(Mandatory)]
+        [parameter()]
         [ValidateSet('Trays','PaperSizes','MediaTypes')]
-        [string]$DisplayType,
+        [string]$DisplayType = 'Trays',
 
         [parameter()]
         [ValidateSet('Type','ID')]
@@ -31,18 +31,8 @@ function Get-OMPlusTypeTable {
     $XML = New-Object -TypeName XML
     $XML.Load($TypesFile)
 
-    $BaseDriverTypes = Select-XML -XML $XML -XPath '//PTYPE' | Select-Object -ExpandProperty node | Select-Object -ExpandProperty name
-    if ($DriverType -in $BaseDriverTypes) {
-        Write-Verbose -Message ('This DriverType ({0}) is supported on this system' -f $DriverType)
-    }
-    else {
-        Write-Warning ('This DriverType ({0}) is not supported on this system.{1}' -f $DriverType, $CRLF)
-        Write-Verbose -Message ('List of supported DriverTypes:{0}{1}' -f $CRLF, ($BaseDriverTypes -join $CRLF)) -Verbose
-        return
-    }
-
     switch ($DisplayType) {
-        'Trays'      {
+        'Trays' {
             switch ($SortBy) {
                 'Type' { $SortType = 'TrayRef' }
                 'ID'   { $SortType = 'ID' }
