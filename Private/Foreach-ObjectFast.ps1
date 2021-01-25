@@ -1,14 +1,14 @@
 function ForEach-ObjectFast {
-  param (
-      [ScriptBlock]
-      $Process,
+    param (
+        [ScriptBlock]
+        $Process,
 
-      [ScriptBlock]
-      $Begin,
+        [ScriptBlock]
+        $Begin,
 
-      [ScriptBlock]
-      $End
-  )
+        [ScriptBlock]
+        $End
+    )
 
     begin {
         # construct a hard-coded anonymous simple function from
@@ -33,7 +33,7 @@ function ForEach-ObjectFast {
         $pip.Begin($true)
     }
     process {
-      # forward incoming pipeline data to the custom scriptblock:
+        # forward incoming pipeline data to the custom scriptblock:
         $pip.Process($_)
     }
     end {
