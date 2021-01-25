@@ -95,7 +95,14 @@ function Get-OMPlusPrinterConfiguration {
 
     foreach ($Printer in $PrinterName) {
         $ConfigPath = [System.IO.Path]::Combine($GLobal:OMPlusPrinterPath, $Printer, 'configuration')
-        $Config = Get-Content -Path $ConfigPath
+        Try {
+            $Config = Get-Content -Path $ConfigPath -ErrorAction Stop
+        }
+        catch {
+            Write-Warning -Message ('Printer ({0}) does not appear to exist, skipping' -f $Printer)
+            Continue
+        }
+
         $Output = [pscustomobject]@{
             Printer = $Printer
         }
