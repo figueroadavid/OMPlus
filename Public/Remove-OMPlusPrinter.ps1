@@ -29,9 +29,9 @@ function  Remove-OMPlusPrinter {
     Process {
         foreach ($Printer in $PrinterName) {
             $Arguments = '-x {0}' -f $Printer.ToUpper()
-            if ($PSCmdlet.ShouldProcess(('Remove printer {0}' -f $PrinterName), '', '')) {
+            if ($PSCmdlet.ShouldProcess(('Remove printer {0}' -f $Printer), '', '')) {
                 Start-Process -FilePath $ExePath -ArgumentList $Arguments -Wait -WindowStyle Hidden
-                Write-Warning -Message ('Do not forget to Remove the EPR Record for {0}' -f $PrinterName)
+                Write-Warning -Message ('Do not forget to Remove the EPR Record for {0}' -f $Printer)
             }
         }
     }
