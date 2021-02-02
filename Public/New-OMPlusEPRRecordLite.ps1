@@ -179,6 +179,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 Remove-Variable -Name TransformHostPath
 
                 $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
+                $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
             }
 
         }
@@ -293,9 +294,6 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
         end {
             if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
-
-
-                $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
                 $stream = [System.IO.StreamWriter]::new($EPSMapPath, $FileAppend)
                 $EPRRecordList | ForEach-Object {
                     $thisRecord = $_
@@ -423,9 +421,23 @@ else {
             [string[]]$IsRX = 'n',
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [string[]]$MediaType = 'None'
+            [string[]]$MediaType = 'None',
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [string]$Append
         )
 
+        begin {
+            if ($Append) {
+                $FileAppend = $True
+                $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
+                $TransformHosts     = Get-Content -Path $TransformHostPath
+                Remove-Variable -Name TransformHostPath
+
+                $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
+                $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
+            }
+        }
         process {
             foreach ($Item in $EPRQueueName) {
                 $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
@@ -533,6 +545,35 @@ else {
                 }
                 $RecordList -join '|' -replace 'DELETEME'
                 Write-Warning -Message 'Do not forget to open the EPR Record utility and save the file!'
+            }
+        }
+
+        end {
+            if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
+                $stream = [System.IO.StreamWriter]::new($EPSMapPath, $FileAppend)
+                $EPRRecordList | ForEach-Object {
+                    $thisRecord = $_
+                    if ($PSCmdlet.ShouldProcess(('Adding [{0}] to the eps_map file' -f $thisRecord), '', '')) {
+                        $stream.WriteLine($thisRecord)
+                    }
+                }
+                $stream.Close()
+
+                $TransformHosts | ForEach-Object {
+                    $thisHost = $_
+                    Write-Verbose -Message ('Using pingmsg to update host: {0}' -f $thisHost )
+                    $pingSplat = @{
+                        FilePath        = $pingMsgPath
+                        ArgumentList    = $thisHost
+                        Verb            = 'runas'
+                        Wait            = $true
+                        WindowStyle    = 'Hidden'
+                    }
+                    Start-Process $pingSplat
+                }
+            }
+            else {
+                $EPRRecordList
             }
         }
     }
