@@ -177,7 +177,6 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
         begin {
             if ($Append) {
-                $FileAppend = $True
                 $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
                 $TransformHosts     = Get-Content -Path $TransformHostPath
                 Remove-Variable -Name TransformHostPath
@@ -296,10 +295,10 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         end {
             if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
                 $AddSplat = @{
-                    Path  = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
-                    Value = $thisRecord 
+                    Path  = $EPSMapPath
+                    Value = $thisRecord
                 }
-                Add-Content @AddSplat 
+                Add-Content @AddSplat
 
                 $TransformHosts | ForEach-Object {
                     $thisHost = $_
@@ -385,7 +384,7 @@ else {
 
 
         #>
-        [cmdletbinding()]
+        [cmdletbinding(SupportsShouldProcess)]
         param(
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateScript({
@@ -431,7 +430,6 @@ else {
 
         begin {
             if ($Append) {
-                $FileAppend = $True
                 $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
                 $TransformHosts     = Get-Content -Path $TransformHostPath
                 Remove-Variable -Name TransformHostPath
@@ -552,8 +550,8 @@ else {
         end {
             if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
                 $AddSplat = @{
-                    Path  = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
-                    Value = $thisRecord 
+                    Path  = $EPSMapPath
+                    Value = $thisRecord
                 }
                 Add-Content @AddSplat
                 $TransformHosts | ForEach-Object {
