@@ -241,7 +241,7 @@ This is a work in progress.  It is designed to create a correctly formatted Epic
 | --------------- | ----------- |
 | `-ServerName` | The name of the server that will host the EPR Record; defaults to the current machine; Having the correct servername isn't *critical* per-se; the OMPlus system will automatically update the record |
 | `-EPRQueueName`| The name of the EPR Queue Name for the Record; there can be multiple EPRQueueNames per OMPlusQueueName |
-| `-OMPLusQueueName`| the queue/destination name in OMPlus; there can be multiple _OMPLusQueueName_'s per _EPRQueueName_'s |
+| `-OMPLusQueueName`| the queue/destination name in OMPlus |
 | `-DriverName`| the name of the driver used in the system; this name _is_ case|sensitive; this name comes from the _Types_ list in the OMPlus Administration tool |
 | `-TrayName`| this is the name of the tray to use.  It must match the trays available in the `types.conf`. |
 | `-DuplexOption`| this is the Duplex option setting in the _Epic Print Record_ tool; it comes from the `types.conf` file; it can be _None_ (which is blank), _Simplex_, _Horizontal_ (Short Edge), or _Vertical_ (Long Edge) |
@@ -414,6 +414,7 @@ WARNING: Do not forget to Remove the EPR Record for Office1Prt_004
 ### `Remove-OMPlusPrintJob`
 
 This function deletes print jobs that exists in the system. It has 3 modes of operation:
+
 1. By RID number: Deletes the job with the job number  (uses `dcccancel.exe`)
 2. By Age: Deletes all print jobs older than the specified time in minutes (uses `dccgrp.exe`)
 3. By Printer: Resets the printer, thereby deleting the print jobs going to that printer (uses `dccreset.exe`)
