@@ -59,6 +59,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .PARAMETER MediaType
             This is the displayname of the media type used in the EPR Record.
             If no MediaType is provided, the generated EPR record will contain an empty field.
+
         .PARAMETER Append
             This switch tells the script to automatically append the record to the eps_map.
 
@@ -89,10 +90,10 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [string]$ServerName = ([system.net.dns]::GetHostByName($env:computername).hostname),
 
             [parameter(Mandatory)]
-            [string[]]$EPRQueueName,
+            [string]$EPRQueueName,
 
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-            [string[]]$OMPLusQueueName,
+            [string]$OMPLusQueueName,
 
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
@@ -126,11 +127,11 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                         )
                     }
             })]
-            [string[]]$TrayName = 'None',
+            [string]$TrayName = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateSet('None', 'Simplex', 'Horizontal', 'Vertical')]
-            [string[]]$DuplexOption = 'None',
+            [string]$DuplexOption = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
@@ -147,11 +148,11 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                         )
                     }
             })]
-            [string[]]$PaperSize = 'None',
+            [string]$PaperSize = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateSet('n','y')]
-            [string[]]$IsRX = 'n',
+            [string]$IsRX = 'n',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
@@ -168,7 +169,10 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                         )
                     }
             })]
-            [string[]]$MediaType = 'None'
+            [string]$MediaType = 'None',
+
+            [parameter(ValueFromPipelineByPropertyName)]
+            [switch]$Append
         )
 
         begin {
@@ -181,127 +185,121 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
                 $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
             }
-
+            $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
+            $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
+            $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
         }
+
         process {
-            $EPRRecordList = foreach ($Item in $EPRQueueName) {
-                $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
-                $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
-                $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
-
-                $RecordList = New-Object -TypeName System.Collections.Generic.List[string]
-                $RecordList.Add($ServerName)
-                $RecordList.Add($EPRQueueName)
-                $RecordList.Add($OMPLusQueueName)
-                $RecordList.Add($DriverName)
+            $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
+            $thisRecord.Add($ServerName)
+            $thisRecord.Add($EPRQueueName)
+            $thisRecord.Add($OMPLusQueueName)
+            $thisRecord.Add($DriverName)
 
 
-                if ($TrayName -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
-                        Measure-Object | Select-Object -Property Count
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No tray names match {0}, putting in an empty field' -f $TrayName
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($TrayDictionary |
-                                Where-Object { $_.TrayRef -Match [regex]::escape($TrayName) } |
-                                Select-Object -ExpandProperty TrayID))
-                            )
-                        }
-                        default {
-                            $Message = 'TrayName ({0}) matches too many items, please narrow the list and try again' -f $TrayName
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-
-                if ($DuplexOption -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $RecordList.Add($DuplexOption)
-                }
-
-                if ($PaperSize -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $PaperSizeDictionary | Where-Object { $_.PaperSizeRef -match ('^{0}$' -f [RegEx]::Escape( $PaperSize)) } |
-                        Measure-Object | Select-Object -Property Count
-
-
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No PaperSize names match {0}, putting in an empty field' -f $PaperSize
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($PaperSizeDictionary |
-                                Where-Object { $_.PaperSizeRef -Match [regex]::escape($PaperSize) } |
-                                Select-Object -ExpandProperty PaperSizeID))
-                            )
-                        }
-                        default {
-                            $Message = 'PaperSize ({0}) matches too many items, please narrow the list and try again' -f $PaperSize
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-
-                $RecordList.Add($IsRX)
-
-                if ($MediaType -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $MediaTypeDictionary | Where-Object { $_.MediaTypeRef -match ('^{0}$' -f [RegEx]::Escape( $MediaType) ) } |
-                        Measure-Object | Select-Object -Property Count
-
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No MediaType names match {0}, putting in an empty field' -f $MediaType
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($MediaTypeDictionary |
-                                Where-Object { $_.MediaTypeRef -Match [regex]::escape($MediaType) } |
-                                Select-Object -ExpandProperty MediaTypeID))
-                            )
-                        }
-                        default {
-                            $Message = 'MediaType ({0}) matches too many items, please narrow the list and try again' -f $MediaType
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-                $RecordList -join '|' -replace 'DELETEME'
+            if ($TrayName -eq 'None') {
+                $thisRecord.Add('DELETEME')
             }
+            else {
+                $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
+                    Measure-Object | Select-Object -Property Count
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No tray names match {0}, putting in an empty field' -f $TrayName
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($TrayDictionary |
+                            Where-Object { $_.TrayRef -Match [regex]::escape($TrayName) } |
+                            Select-Object -ExpandProperty TrayID))
+                        )
+                    }
+                    default {
+                        $Message = 'TrayName ({0}) matches too many items, please narrow the list and try again' -f $TrayName
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+
+            if ($DuplexOption -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisRecord.Add($DuplexOption)
+            }
+
+            if ($PaperSize -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisMatch = $PaperSizeDictionary | Where-Object { $_.PaperSizeRef -match ('^{0}$' -f [RegEx]::Escape( $PaperSize)) } |
+                    Measure-Object | Select-Object -Property Count
+
+
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No PaperSize names match {0}, putting in an empty field' -f $PaperSize
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($PaperSizeDictionary |
+                            Where-Object { $_.PaperSizeRef -Match [regex]::escape($PaperSize) } |
+                            Select-Object -ExpandProperty PaperSizeID))
+                        )
+                    }
+                    default {
+                        $Message = 'PaperSize ({0}) matches too many items, please narrow the list and try again' -f $PaperSize
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+
+            $thisRecord.Add($IsRX)
+
+            if ($MediaType -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisMatch = $MediaTypeDictionary | Where-Object { $_.MediaTypeRef -match ('^{0}$' -f [RegEx]::Escape( $MediaType) ) } |
+                    Measure-Object | Select-Object -Property Count
+
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No MediaType names match {0}, putting in an empty field' -f $MediaType
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($MediaTypeDictionary |
+                            Where-Object { $_.MediaTypeRef -Match [regex]::escape($MediaType) } |
+                            Select-Object -ExpandProperty MediaTypeID))
+                        )
+                    }
+                    default {
+                        $Message = 'MediaType ({0}) matches too many items, please narrow the list and try again' -f $MediaType
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+            $thisRecord = $thisRecord -join '|' -replace 'DELETEME'
         }
 
         end {
             if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
-                $stream = [System.IO.StreamWriter]::new($EPSMapPath, $FileAppend)
-                $EPRRecordList | ForEach-Object {
-                    $thisRecord = $_
-                    if ($PSCmdlet.ShouldProcess(('Adding [{0}] to the eps_map file' -f $thisRecord), '', '')) {
-                        $stream.WriteLine($thisRecord)
-                    }
+                $AddSplat = @{
+                    Path  = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
+                    Value = $thisRecord 
                 }
-                $stream.Close()
+                Add-Content @AddSplat 
 
                 $TransformHosts | ForEach-Object {
                     $thisHost = $_
@@ -313,11 +311,12 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                         Wait            = $true
                         WindowStyle    = 'Hidden'
                     }
-                    Start-Process $pingSplat
+                    Write-Verbose -Message ('Triggering update for {0}' -f $thisHost)
+                    Start-Process @pingSplat
                 }
             }
             else {
-                $EPRRecordList
+                $thisRecord
             }
         }
     }
@@ -371,6 +370,9 @@ else {
             This is the displayname of the media type used in the EPR Record.
             If no MediaType is provided, the generated EPR record will contain an empty field.
 
+        .PARAMETER Append
+            This switch tells the script to automatically append the record to the eps_map.
+
         .INPUTS
             [string]
         .OUTPUTS
@@ -398,33 +400,33 @@ else {
             [string]$ServerName = ([system.net.dns]::GetHostByName($env:computername).hostname),
 
             [parameter(Mandatory)]
-            [string[]]$EPRQueueName,
+            [string]$EPRQueueName,
 
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-            [string[]]$OMPLusQueueName,
+            [string]$OMPLusQueueName,
 
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
             [string]$DriverName,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [string[]]$TrayName = 'None',
+            [string]$TrayName = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateSet('None', 'Simplex', 'Horizontal', 'Vertical')]
-            [string[]]$DuplexOption = 'None',
+            [string]$DuplexOption = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [string[]]$PaperSize = 'None',
+            [string]$PaperSize = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
             [ValidateSet('n','y')]
-            [string[]]$IsRX = 'n',
+            [string]$IsRX = 'n',
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [string[]]$MediaType = 'None',
+            [string]$MediaType = 'None',
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [string]$Append
+            [switch]$Append
         )
 
         begin {
@@ -437,128 +439,123 @@ else {
                 $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
                 $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
             }
+
+            $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
+            $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
+            $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
         }
+
         process {
-            foreach ($Item in $EPRQueueName) {
-                $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
-                $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
-                $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
 
-                $RecordList = New-Object -TypeName System.Collections.Generic.List[string]
-                $RecordList.Add($ServerName)
-                $RecordList.Add($EPRQueueName)
-                $RecordList.Add($OMPLusQueueName)
-                $RecordList.Add($DriverName)
+            $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
+            $thisRecord.Add($ServerName)
+            $thisRecord.Add($EPRQueueName)
+            $thisRecord.Add($OMPLusQueueName)
+            $thisRecord.Add($DriverName)
 
 
-                if ($TrayName -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
-                        Measure-Object | Select-Object -Property Count
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No tray names match {0}, putting in an empty field' -f $TrayName
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($TrayDictionary |
-                                Where-Object { $_.TrayRef -Match [regex]::escape($TrayName) } |
-                                Select-Object -ExpandProperty TrayID))
-                            )
-                        }
-                        default {
-                            $Message = 'TrayName ({0}) matches too many items, please narrow the list and try again' -f $TrayName
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-
-                if ($DuplexOption -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $RecordList.Add($DuplexOption)
-                }
-
-                if ($PaperSize -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $PaperSizeDictionary | Where-Object { $_.PaperSizeRef -match ('^{0}$' -f [RegEx]::Escape( $PaperSize)) } |
-                        Measure-Object | Select-Object -Property Count
-
-
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No PaperSize names match {0}, putting in an empty field' -f $PaperSize
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($PaperSizeDictionary |
-                                Where-Object { $_.PaperSizeRef -Match [regex]::escape($PaperSize) } |
-                                Select-Object -ExpandProperty PaperSizeID))
-                            )
-                        }
-                        default {
-                            $Message = 'PaperSize ({0}) matches too many items, please narrow the list and try again' -f $PaperSize
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-
-                $RecordList.Add($IsRX)
-
-                if ($MediaType -eq 'None') {
-                    $RecordList.Add('DELETEME')
-                }
-                else {
-                    $thisMatch = $MediaTypeDictionary | Where-Object { $_.MediaTypeRef -match ('^{0}$' -f [RegEx]::Escape( $MediaType) ) } |
-                        Measure-Object | Select-Object -Property Count
-
-                    switch ($thisMatch.Count) {
-                        0 {
-                            $RecordList.Add('DELETEME')
-                            $Message = 'No MediaType names match {0}, putting in an empty field' -f $MediaType
-                            Write-Verbose -Message $Message
-                        }
-                        1 {
-                            $RecordList.Add( ('!{0}' -f ($MediaTypeDictionary |
-                                Where-Object { $_.MediaTypeRef -Match [regex]::escape($MediaType) } |
-                                Select-Object -ExpandProperty MediaTypeID))
-                            )
-                        }
-                        default {
-                            $Message = 'MediaType ({0}) matches too many items, please narrow the list and try again' -f $MediaType
-                            Write-Warning -Message $Message
-                            return
-                        }
-                    }
-                    Remove-Variable -Name thisMatch
-                }
-                $RecordList -join '|' -replace 'DELETEME'
-                Write-Warning -Message 'Do not forget to open the EPR Record utility and save the file!'
+            if ($TrayName -eq 'None') {
+                $thisRecord.Add('DELETEME')
             }
+            else {
+                $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
+                    Measure-Object | Select-Object -Property Count
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No tray names match {0}, putting in an empty field' -f $TrayName
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($TrayDictionary |
+                            Where-Object { $_.TrayRef -Match [regex]::escape($TrayName) } |
+                            Select-Object -ExpandProperty TrayID))
+                        )
+                    }
+                    default {
+                        $Message = 'TrayName ({0}) matches too many items, please narrow the list and try again' -f $TrayName
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+
+            if ($DuplexOption -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisRecord.Add($DuplexOption)
+            }
+
+            if ($PaperSize -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisMatch = $PaperSizeDictionary | Where-Object { $_.PaperSizeRef -match ('^{0}$' -f [RegEx]::Escape( $PaperSize)) } |
+                    Measure-Object | Select-Object -Property Count
+
+
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No PaperSize names match {0}, putting in an empty field' -f $PaperSize
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($PaperSizeDictionary |
+                            Where-Object { $_.PaperSizeRef -Match [regex]::escape($PaperSize) } |
+                            Select-Object -ExpandProperty PaperSizeID))
+                        )
+                    }
+                    default {
+                        $Message = 'PaperSize ({0}) matches too many items, please narrow the list and try again' -f $PaperSize
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+
+            $thisRecord.Add($IsRX)
+
+            if ($MediaType -eq 'None') {
+                $thisRecord.Add('DELETEME')
+            }
+            else {
+                $thisMatch = $MediaTypeDictionary | Where-Object { $_.MediaTypeRef -match ('^{0}$' -f [RegEx]::Escape( $MediaType) ) } |
+                    Measure-Object | Select-Object -Property Count
+
+                switch ($thisMatch.Count) {
+                    0 {
+                        $thisRecord.Add('DELETEME')
+                        $Message = 'No MediaType names match {0}, putting in an empty field' -f $MediaType
+                        Write-Verbose -Message $Message
+                    }
+                    1 {
+                        $thisRecord.Add( ('!{0}' -f ($MediaTypeDictionary |
+                            Where-Object { $_.MediaTypeRef -Match [regex]::escape($MediaType) } |
+                            Select-Object -ExpandProperty MediaTypeID))
+                        )
+                    }
+                    default {
+                        $Message = 'MediaType ({0}) matches too many items, please narrow the list and try again' -f $MediaType
+                        Write-Warning -Message $Message
+                        return
+                    }
+                }
+                Remove-Variable -Name thisMatch
+            }
+            $thisRecord = $thisRecord -join '|' -replace 'DELETEME'
         }
 
         end {
             if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
-                $stream = [System.IO.StreamWriter]::new($EPSMapPath, $FileAppend)
-                $EPRRecordList | ForEach-Object {
-                    $thisRecord = $_
-                    if ($PSCmdlet.ShouldProcess(('Adding [{0}] to the eps_map file' -f $thisRecord), '', '')) {
-                        $stream.WriteLine($thisRecord)
-                    }
+                $AddSplat = @{
+                    Path  = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
+                    Value = $thisRecord 
                 }
-                $stream.Close()
-
+                Add-Content @AddSplat
                 $TransformHosts | ForEach-Object {
                     $thisHost = $_
                     Write-Verbose -Message ('Using pingmsg to update host: {0}' -f $thisHost )
@@ -569,11 +566,12 @@ else {
                         Wait            = $true
                         WindowStyle    = 'Hidden'
                     }
-                    Start-Process $pingSplat
+                    Write-Verbose -Message ('Triggering update for {0}' -f $thisHost)
+                    Start-Process @pingSplat
                 }
             }
             else {
-                $EPRRecordList
+                $thisRecord
             }
         }
     }
