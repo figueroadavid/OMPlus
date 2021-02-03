@@ -177,10 +177,6 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
 
         begin {
             if ($Append) {
-                $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
-                $TransformHosts     = Get-Content -Path $TransformHostPath
-                Remove-Variable -Name TransformHostPath
-
                 $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
                 $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
             }
@@ -299,20 +295,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     Value = $thisRecord
                 }
                 Add-Content @AddSplat
-
-                $TransformHosts | ForEach-Object {
-                    $thisHost = $_
-                    Write-Verbose -Message ('Using pingmsg to update host: {0}' -f $thisHost )
-                    $pingSplat = @{
-                        FilePath        = $pingMsgPath
-                        ArgumentList    = $thisHost
-                        Verb            = 'runas'
-                        Wait            = $true
-                        WindowStyle    = 'Hidden'
-                    }
-                    Write-Verbose -Message ('Triggering update for {0}' -f $thisHost)
-                    Start-Process @pingSplat
-                }
+                Update-OMPlusTransformServer
             }
             else {
                 $thisRecord
@@ -554,19 +537,7 @@ else {
                     Value = $thisRecord
                 }
                 Add-Content @AddSplat
-                $TransformHosts | ForEach-Object {
-                    $thisHost = $_
-                    Write-Verbose -Message ('Using pingmsg to update host: {0}' -f $thisHost )
-                    $pingSplat = @{
-                        FilePath        = $pingMsgPath
-                        ArgumentList    = $thisHost
-                        Verb            = 'runas'
-                        Wait            = $true
-                        WindowStyle    = 'Hidden'
-                    }
-                    Write-Verbose -Message ('Triggering update for {0}' -f $thisHost)
-                    Start-Process @pingSplat
-                }
+                Update-OMPlusTransformServer
             }
             else {
                 $thisRecord
