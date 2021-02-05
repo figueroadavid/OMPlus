@@ -25,11 +25,13 @@ function Update-OMPlusTransformServer {
     [cmdletbinding()]
     param()
     $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
+    $PingMsgPath        = [System.IO.Path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
+
     Get-Content -Path $TransformHostPath | ForEach-Object {
         $thisHost = $_
         Write-Verbose -Message ('Using pingmsg to update host: {0}' -f $thisHost )
         $pingSplat = @{
-            FilePath        = $pingMsgPath
+            FilePath        = $PingMsgPath
             ArgumentList    = $thisHost
             Verb            = 'runas'
             Wait            = $true
