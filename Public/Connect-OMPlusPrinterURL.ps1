@@ -67,7 +67,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 ) {
                     return
                 }
                 try {
-                    $thisConfig = Get-OMPlusPrinterConfiguration -ErrorAction Stop
+                    $thisConfig = Get-OMPlusPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
                     if ( [string]::IsNullOrEmpty($thisConfig.URL) -or [string]::IsNullOrWhiteSpace($thisConfig.URL)) {
                         Write-Warning -Message ('This printer ({0}) does not appear to have a web page defined' -f $Printer)
                         continue
@@ -141,7 +141,7 @@ else {
                     return
                 }
                 try {
-                    $thisConfig = Get-OMPlusPrinterConfiguration -ErrorAction Stop
+                    $thisConfig = Get-OMPlusPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
                     if ( [string]::IsNullOrEmpty($thisConfig.URL) -or [string]::IsNullOrWhiteSpace($thisConfig.URL)) {
                         Write-Warning -Message ('This printer ({0}) does not appear to have a web page defined' -f $Printer)
                         continue
