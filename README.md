@@ -1,24 +1,3 @@
-<style>
-    .col2table th:first-of-type {
-        width: 30%;
-    }
-    .col2table th:nth-of-type(2) {
-        width: 70%;
-    }
-
-    .col4table th {
-        width: 25%;
-        colspan: 4;
-    }
-
-    tr:nth-of-type(2n) {
-        background-color: #efefef;
-    }
-
-    th {
-        background-color: #bbbbbb;
-    }
-</style>
 # OMPlus Delivery Manager
 
 ![OMPlusLogo](https://www.plustechnologies.com/wp-content/uploads/2015/01/logo-plustechnologies.png)
