@@ -1,4 +1,4 @@
-functino Sync-OMPSecondaryPrinter {
+function Sync-OMPSecondaryPrinter {
     [cmdletbinding()]
     param(
         [parameter(ValueFromPipelineByPropertyName)]
