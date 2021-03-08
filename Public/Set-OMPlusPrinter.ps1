@@ -1,4 +1,4 @@
-if ($Global:IsOMPLusPrimaryMPS) {
+if ($IsOMPLusPrimaryMPS) {
     function Set-OMPlusPrinter {
         <#
         .SYNOPSIS

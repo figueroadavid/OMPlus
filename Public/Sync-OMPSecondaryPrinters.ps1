@@ -25,7 +25,7 @@ function Sync-OMPSecondaryPrinter {
 
     process {
         if ($PrinterName -contains 'All') {
-            if ($Global:IsOMPLusPrimaryMPS) {
+            if ($IsOMPLusPrimaryMPS) {
                 $ProcessStartInfo.Arguments     = '-d all'
             }
             else {
@@ -45,7 +45,7 @@ function Sync-OMPSecondaryPrinter {
                     CurrentOperation    = 'Start'
                     Status              = 'Starting'
                 }
-                if ($Global:IsOMPLusPrimaryMPS) {
+                if ($IsOMPLusPrimaryMPS) {
                     $ProgressSplat['Activity'] = 'Pushing printers from primary MPS to secondary MPS'
                 }
                 else {
@@ -61,7 +61,7 @@ function Sync-OMPSecondaryPrinter {
                         CurrentOperation    = $Printer
                         Status              = '{0} of {1}' -f $CurrentCount, $PrinterName.Count
                     }
-                    if ($Global:IsOMPLusPrimaryMPS) {
+                    if ($IsOMPLusPrimaryMPS) {
                         $ProgressSplat['Activity'] = 'Pushing printers from primary MPS to secondary MPS'
                     }
                     else {
@@ -70,7 +70,7 @@ function Sync-OMPSecondaryPrinter {
                     Write-Progress @ProgressSplat
                 }
 
-                if ($Global:IsOMPLusPrimaryMPS) {
+                if ($IsOMPLusPrimaryMPS) {
                     $ProcessStartInfo.Arguments = '-d {0}' -f $Printer
                 }
                 else {

@@ -11,7 +11,7 @@ function Remove-OMPlusSecondaryMPSPrinters {
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$PrimaryMPSPrinterDirectory = ( &({
-            if ($Global:IsOMPLusPrimaryMPS) {
+            if ($IsOMPLusPrimaryMPS) {
                 $OMPlusPrinterPath
             }
             else {
@@ -21,7 +21,7 @@ function Remove-OMPlusSecondaryMPSPrinters {
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$SecondaryMPSPrinterDirectory = (& ({
-            if ($Global:IsOMPLusPrimaryMPS) {
+            if ($IsOMPLusPrimaryMPS) {
                 '\\{0}\{1}' -f $OMPlusSecondaryMPS, $OMPlusPrinterPath.Replace(':', '$')
             }
             else {
@@ -74,7 +74,7 @@ function Remove-OMPlusSecondaryMPSPrinters {
     }
 
     process {
-        if ($Global:IsOMPLusPrimaryMPS) {
+        if ($IsOMPLusPrimaryMPS) {
             if (Test-WSMan -ComputerName $OMPlusSecondaryMPS)
             {
                 $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $OMPlusSecondaryMPS, $CRLF, ($PrintersToRemove -join ',')

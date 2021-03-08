@@ -1,4 +1,4 @@
-if ($Global:IsOMPLusPrimaryMPS) {
+if ($IsOMPLusPrimaryMPS) {
     function Get-OMPLusDriverNames {
         <#
         .SYNOPSIS

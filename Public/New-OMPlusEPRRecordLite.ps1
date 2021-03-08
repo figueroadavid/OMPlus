@@ -1,4 +1,4 @@
-if ($Global:IsOMPLusPrimaryMPS) {
+if ($IsOMPLusPrimaryMPS) {
     if ($PSVersionTable.PSVersion.Major -ge 5) {
         function New-OMPlusEPRRecordLite {
             <#

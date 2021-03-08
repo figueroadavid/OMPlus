@@ -10,14 +10,14 @@ Write-Verbose -Message 'Setting parameters for OMPlusPrimaryMPS, OMPlusSecondary
 $pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $OMPlusSystemPath, 'pingMaster'))
 if ($pingMaster -eq 'none') {
     $OMPlusPrimaryMPS   = [system.net.dns]::GetHostByName($env:computername).hostname
-    $Global:IsOMPLusPrimaryMPS = $true
+    $IsOMPLusPrimaryMPS = $true
 
     $pingParmPath = [system.io.path]::combine($OMPlusSystemPath, 'pingParms')
     $OMPlusSecondaryMPS = (Get-Content -Path $pingParmPath |
         Where-Object { $_ -match '^Backup'}).Split('=')[1]
 }
 else {
-    $Global:IsOMPLusPrimaryMPS = $false
+    $IsOMPLusPrimaryMPS = $false
     $OMPlusPrimaryMPS   = $pingMaster
     $OMPlusSecondaryMPS = [System.Net.Dns]::GetHostByName($env:computername).hostname
 }
@@ -35,7 +35,7 @@ Get-ChildItem -Path $PSScriptRoot\Public -File -Filter *.ps1 | Where-Object full
         Write-Verbose -Message ('Importing script: {0}' -f $_.FullName ) -Verbose
         . $_.FullName
     }
-if ($Global:IsOMPLusPrimaryMPS) {
+if ($IsOMPLusPrimaryMPS) {
     $Global:ValidTypes      = Get-OMPLusDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 }
 
