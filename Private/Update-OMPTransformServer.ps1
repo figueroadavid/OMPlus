@@ -1,4 +1,4 @@
-function Update-OMPlusTransformServer {
+function Update-OMPTransformServer {
     <#
     .SYNOPSIS
         It uses the pingmsg.exe utility to trigger updates on the Transform servers
