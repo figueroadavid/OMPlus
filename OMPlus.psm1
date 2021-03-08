@@ -22,7 +22,7 @@ else {
     $Global:OMPlusSecondaryMPS = [System.Net.Dns]::GetHostByName($env:computername).hostname
 }
 
-Remove-Variable -Name pingMaster,pingParmPath
+Remove-Variable -Name pingMaster,pingParmPath -ErrorAction SilentlyContinue
 
 Get-ChildItem -Path $PSScriptRoot\Private -File -Filter *.ps1 | Where-Object fullname -notmatch '`.tests`.ps1' |
     ForEach-Object {
