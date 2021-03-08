@@ -48,3 +48,6 @@ if ($Global:IsOMPLusPrimaryMPS) {
         }
     }
 }
+else {
+    Write-Warning 'Not running on Primary OMPlus Server, unable to retrieve driver names'
+}
