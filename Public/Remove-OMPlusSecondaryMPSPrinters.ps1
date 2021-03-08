@@ -2,7 +2,7 @@ function Remove-OMPlusSecondaryMPSPrinters {
     [cmdletbinding(SupportsShouldProcess, DefaultParameterSetName = 'byDir')]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byFile')]
-        [ValdidateScript( {Test-Path -Path $_ } )]
+        [ValidateScript( {Test-Path -Path $_ } )]
         [string]$PrimaryPrinterFile,
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byFile')]
@@ -10,48 +10,46 @@ function Remove-OMPlusSecondaryMPSPrinters {
         [string]$SecondaryPrinterFile,
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
-        [string]$PrimaryMPSPrinterDirectory = ({
+        [string]$PrimaryMPSPrinterDirectory = ( &({
             if ($Global:IsOMPLusPrimaryMPS) {
                 $GLobal:OMPlusPrinterPath
             }
             else {
-                $pingParmPath = [system.io.path]::combine($Global:OMPLusSystemPath, 'pingParms')
-                $SecondaryServer = (Get-Content -Path $pingParmPath |
-                    Where-Object { $_ -match '^Backup'}).Split('=')[1]
-                '\\{0}\{1}' -f $SecondaryServer, $GLobal:OMPlusPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $Global:OMPlusPrimaryMPS, $GLobal:OMPlusPrinterPath.Replace(':', '$')
             }
-        }),
+        })),
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
-        [string]$SecondaryMPSPrinterDirectory = ({
+        [string]$SecondaryMPSPrinterDirectory = (& ({
             if ($Global:IsOMPLusPrimaryMPS) {
-                $pingParmPath = [system.io.path]::combine($Global:OMPLusSystemPath, 'pingParms')
-                $SecondaryServer = (Get-Content -Path $pingParmPath |
-                    Where-Object { $_ -match '^Backup'}).Split('=')[1]
-                '\\{0}\{1}' -f $SecondaryServer, $GLobal:OMPlusPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $Global:OMPlusSecondaryMPS, $GLobal:OMPlusPrinterPath.Replace(':', '$')
             }
             else {
                 $GLobal:OMPlusPrinterPath
             }
-        }),
+        })),
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byList')]
         [string[]]$PrimaryList,
 
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byList')]
-        [string[]]$SecondaryList
+        [string[]]$SecondaryList,
+
+        [parameter(ValueFromPipelineByPropertyName)]
+        [switch]$SecondaryMPSIsTransform
     )
 
     Begin {
-        switch ($PSBoundParameters.ParameterSetName) {
+        switch ($PSCmdlet.ParameterSetName) {
             'byDir' {
                 try {
                     $Primarylist   = Get-ChildItem -Path $PrimaryMPSPrinterDirectory | Select-Object -ExpandProperty BaseName -ErrorAction Stop
-                    $SecondaryList = Get-ChildITem -Path $SecondaryMPSPrinterDirectory | Select-Object -ExpandProperty BaseNam
+                    $SecondaryList = Get-ChildITem -Path $SecondaryMPSPrinterDirectory | Select-Object -ExpandProperty BaseName
                 }
                 catch {
                     $pscmdlet.ThrowTerminatingError($_.exception.message)
                 }
+                break
             }
 
             'byFile' {
@@ -60,14 +58,24 @@ function Remove-OMPlusSecondaryMPSPrinters {
             }
         }
 
+        if ($SecondaryMPSIsTransform) {
+            $MatchPattern = '\$_|pt_transform'
+            $Message = '$SecondaryMPSIsTransform switch is present, not deleting transform printers'
+        }
+        else {
+            $MatchPattern = '\$_'
+            $Message = '$SecondaryMPSIsTransform switch is not present, any pt_transform printers will be deleted along with the rest'
+        }
+
+        Write-Verbose -Message $Message
         $PrintersToRemove = Compare-Object -ReferenceObject $PrimaryList -DifferenceObject $SecondaryList |
-            Where-Object { $_.SideIndicator -eq '=>' -and $_.name -notmatch '\$_' } |
+            Where-Object { $_.SideIndicator -eq '=>' -and $_.name -notmatch $MatchPattern } |
             Select-Object -ExpandProperty InputObject
     }
 
     process {
         if ($Global:IsOMPLusPrimaryMPS) {
-            if (Test-WSMan -ComputerName )
+            if (Test-WSMan -ComputerName $Global:OMPlusSecondaryMPS)
             {
                 $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $Global:OMPlusSecondaryMPS, $CRLF, ($PrintersToRemove -join ',')
                 if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '' )) {
@@ -79,10 +87,14 @@ function Remove-OMPlusSecondaryMPSPrinters {
 
             }
             else {
-                $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $env:COMPUTERNAME, $CRLF, ($PrintersToRemove -join ',')
-                if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '')) {
-                    Remove-OMPlusPrinter -PrinterName $PrintersToRemove
-                }
+                $PSCmdMessage = 'Unable to reach {0} through WSMan (PSRemoting); please rerun this command on that server' -f $Global:OMPlusSecondaryMPS
+                Write-Warning -Message $PSCmdMessage
+            }
+        }
+        else {
+            $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $env:COMPUTERNAME, $CRLF, ($PrintersToRemove -join ',')
+            if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '')) {
+                Remove-OMPlusPrinter -PrinterName $PrintersToRemove
             }
         }
     }
