@@ -36,9 +36,9 @@ function Get-OMPlusPrinterList {
     )
 
     if ($Filter) {
-        Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Directory -Filter $Filter | Select-Object -ExpandProperty BaseName
+        Get-ChildItem -Path $OMPlusPrinterPath -Directory -Filter $Filter | Select-Object -ExpandProperty BaseName
     }
     else {
-        Get-ChildItem -Path $GLobal:OMPlusPrinterPath -Directory | Select-Object -ExpandProperty BaseName
+        Get-ChildItem -Path $OMPlusPrinterPath -Directory | Select-Object -ExpandProperty BaseName
     }
 }

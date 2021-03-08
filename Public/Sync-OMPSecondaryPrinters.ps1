@@ -10,8 +10,8 @@ function Sync-OMPSecondaryPrinter {
 
     begin {
         $ProcessStartInfo                           = [System.Diagnostics.ProcessStartInfo]::new()
-        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($Global:OMPlusBinPath, 'dmdestsync.exe')
-        $ProcessStartInfo.WorkingDirectory          = $Global:OMPLusSystemPath
+        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMPlusBinPath, 'dmdestsync.exe')
+        $ProcessStartInfo.WorkingDirectory          = $OMPlusSystemPath
         $ProcessStartInfo.CreateNoWindow            = $true
         $ProcessStartInfo.RedirectStandardError     = $true
         $ProcessStartInfo.RedirectStandardOutput    = $true

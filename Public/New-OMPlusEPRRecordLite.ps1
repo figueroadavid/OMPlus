@@ -178,8 +178,8 @@ if ($Global:IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
-                    $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
+                    $pingMsgPath = [system.io.path]::Combine($OMPlusBinPath, 'pingmsg.exe')
+                    $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
                 }
                 $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
                 $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
@@ -414,12 +414,12 @@ if ($Global:IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
+                    $TransformHostPath  = [System.IO.Path]::Combine($OMPlusSystemPath, 'sendHosts')
                     $TransformHosts     = Get-Content -Path $TransformHostPath
                     Remove-Variable -Name TransformHostPath
 
-                    $pingMsgPath = [system.io.path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
-                    $EPSMapPath = [system.io.path]::Combine($Global:OMPLusSystemPath, 'eps_map')
+                    $pingMsgPath = [system.io.path]::Combine($OMPlusBinPath, 'pingmsg.exe')
+                    $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
                 }
 
                 $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays

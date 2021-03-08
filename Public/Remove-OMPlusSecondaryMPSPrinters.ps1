@@ -12,20 +12,20 @@ function Remove-OMPlusSecondaryMPSPrinters {
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$PrimaryMPSPrinterDirectory = ( &({
             if ($Global:IsOMPLusPrimaryMPS) {
-                $GLobal:OMPlusPrinterPath
+                $OMPlusPrinterPath
             }
             else {
-                '\\{0}\{1}' -f $Global:OMPlusPrimaryMPS, $GLobal:OMPlusPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $OMPlusPrimaryMPS, $OMPlusPrinterPath.Replace(':', '$')
             }
         })),
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$SecondaryMPSPrinterDirectory = (& ({
             if ($Global:IsOMPLusPrimaryMPS) {
-                '\\{0}\{1}' -f $Global:OMPlusSecondaryMPS, $GLobal:OMPlusPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $OMPlusSecondaryMPS, $OMPlusPrinterPath.Replace(':', '$')
             }
             else {
-                $GLobal:OMPlusPrinterPath
+                $OMPlusPrinterPath
             }
         })),
 
@@ -75,11 +75,11 @@ function Remove-OMPlusSecondaryMPSPrinters {
 
     process {
         if ($Global:IsOMPLusPrimaryMPS) {
-            if (Test-WSMan -ComputerName $Global:OMPlusSecondaryMPS)
+            if (Test-WSMan -ComputerName $OMPlusSecondaryMPS)
             {
-                $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $Global:OMPlusSecondaryMPS, $CRLF, ($PrintersToRemove -join ',')
+                $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $OMPlusSecondaryMPS, $CRLF, ($PrintersToRemove -join ',')
                 if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '' )) {
-                    Invoke-Command -ComputerName $Global:OMPlusSecondaryMPS -ScriptBlock {
+                    Invoke-Command -ComputerName $OMPlusSecondaryMPS -ScriptBlock {
                         Import-Module -Name OMPlus
                         Remove-OMPlusPrinter -PrinterName $Using:PrintersToRemove
                     }
@@ -87,7 +87,7 @@ function Remove-OMPlusSecondaryMPSPrinters {
 
             }
             else {
-                $PSCmdMessage = 'Unable to reach {0} through WSMan (PSRemoting); please rerun this command on that server' -f $Global:OMPlusSecondaryMPS
+                $PSCmdMessage = 'Unable to reach {0} through WSMan (PSRemoting); please rerun this command on that server' -f $OMPlusSecondaryMPS
                 Write-Warning -Message $PSCmdMessage
             }
         }

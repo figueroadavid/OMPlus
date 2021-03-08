@@ -24,8 +24,8 @@ function Update-OMPlusTransformServer {
 
     [cmdletbinding()]
     param()
-    $TransformHostPath  = [System.IO.Path]::Combine($Global:OMPLusSystemPath, 'sendHosts')
-    $PingMsgPath        = [System.IO.Path]::Combine($Global:OMPlusBinPath, 'pingmsg.exe')
+    $TransformHostPath  = [System.IO.Path]::Combine($OMPlusSystemPath, 'sendHosts')
+    $PingMsgPath        = [System.IO.Path]::Combine($OMPlusBinPath, 'pingmsg.exe')
 
     Get-Content -Path $TransformHostPath | ForEach-Object {
         $thisHost = $_

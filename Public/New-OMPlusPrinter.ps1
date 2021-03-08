@@ -239,7 +239,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-ChildItem -Path $Global:OMPlusFormsPath | Select-Object -ExpandProperty BaseName |
+                    Get-ChildItem -Path $OMPlusFormsPath | Select-Object -ExpandProperty BaseName |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -437,7 +437,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $Global:OMPlusBinPath, 'lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $OMPlusBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }
@@ -844,7 +844,7 @@ else {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $Global:OMPlusBinPath, 'lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $OMPlusBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }

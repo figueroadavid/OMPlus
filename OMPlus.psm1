@@ -1,25 +1,25 @@
 #Requires -RunAsAdministrator
 
 $Global:OMHOMEPath          = (Get-ItemProperty -Path 'HKLM:\Software\PlusTechnologies\OMPlusServer' -Name OMHOMEPath).OMHOMEPath
-$GLobal:OMPlusPrinterPath   = [System.IO.Path]::Combine($Global:OMHOMEPath, 'printers')
-$Global:OMPlusBinPath       = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
-$Global:OMPlusFormsPath     = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'forms')
-$Global:OMPLusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
+$OMPlusPrinterPath   = [System.IO.Path]::Combine($Global:OMHOMEPath, 'printers')
+$OMPlusBinPath       = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
+$OMPlusFormsPath     = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'forms')
+$OMPlusSystemPath    = [System.IO.Path]::Combine($Global:OMHOMEPath, 'system')
 
 Write-Verbose -Message 'Setting parameters for OMPlusPrimaryMPS, OMPlusSecondaryMPS'
-$pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $Global:OMPLusSystemPath, 'pingMaster'))
+$pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $OMPlusSystemPath, 'pingMaster'))
 if ($pingMaster -eq 'none') {
-    $Global:OMPlusPrimaryMPS   = [system.net.dns]::GetHostByName($env:computername).hostname
+    $OMPlusPrimaryMPS   = [system.net.dns]::GetHostByName($env:computername).hostname
     $Global:IsOMPLusPrimaryMPS = $true
 
-    $pingParmPath = [system.io.path]::combine($Global:OMPLusSystemPath, 'pingParms')
-    $Global:OMPlusSecondaryMPS = (Get-Content -Path $pingParmPath |
+    $pingParmPath = [system.io.path]::combine($OMPlusSystemPath, 'pingParms')
+    $OMPlusSecondaryMPS = (Get-Content -Path $pingParmPath |
         Where-Object { $_ -match '^Backup'}).Split('=')[1]
 }
 else {
     $Global:IsOMPLusPrimaryMPS = $false
-    $Global:OMPlusPrimaryMPS   = $pingMaster
-    $Global:OMPlusSecondaryMPS = [System.Net.Dns]::GetHostByName($env:computername).hostname
+    $OMPlusPrimaryMPS   = $pingMaster
+    $OMPlusSecondaryMPS = [System.Net.Dns]::GetHostByName($env:computername).hostname
 }
 
 Remove-Variable -Name pingMaster,pingParmPath -ErrorAction SilentlyContinue
