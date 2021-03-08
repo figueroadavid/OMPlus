@@ -1,4 +1,4 @@
-function Remove-OMPlusEPRRecord {
+Function Remove-OMPEPRRecord {
     [cmdletbinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]

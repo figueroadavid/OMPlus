@@ -1,5 +1,5 @@
 if ($PSVersionTable.PSVersion.Major -ge 5) {
-    function Get-OMPlusPrinterConfiguration {
+    Function Get-OMPPrinterConfiguration {
         <#
         .SYNOPSIS
             Retrieves the properties of one or more configurations in OMPlus
@@ -134,7 +134,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
     }
 }
 else {
-    function Get-OMPlusPrinterConfiguration {
+    Function Get-OMPPrinterConfiguration {
         <#
         .SYNOPSIS
             Retrieves the properties of one or more configurations in OMPlus

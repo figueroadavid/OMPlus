@@ -1,4 +1,4 @@
-function Remove-OMPlusSecondaryMPSPrinters {
+Function Remove-OMPSecondaryMPSPrinters {
     [cmdletbinding(SupportsShouldProcess, DefaultParameterSetName = 'byDir')]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byFile')]

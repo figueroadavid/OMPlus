@@ -1,4 +1,4 @@
-function Remove-OMPlusPrintJob {
+Function Remove-OMPPrintJob {
     <#
     .SYNOPSIS
         Removes print jobs from the OMPlus queues

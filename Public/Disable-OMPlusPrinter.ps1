@@ -1,4 +1,4 @@
-function Disable-OMPlusPrinter {
+Function Disable-OMPPrinter {
     <#
     .SYNOPSIS
         Disables a printer in OMPlus

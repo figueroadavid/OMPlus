@@ -1,5 +1,5 @@
 if ($IsOMPLusPrimaryMPS) {
-    function Get-OMPLusDriverNames {
+    Function Get-OMPDriverNames {
         <#
         .SYNOPSIS
             Retrieves the list of valid driver types for OMPlus

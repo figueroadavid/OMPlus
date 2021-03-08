@@ -1,4 +1,4 @@
-function Get-OMPlusPrinterList {
+Function Get-OMPPrinterList {
     <#
     .SYNOPSIS
         Retrieves a list of printers from OMPlus

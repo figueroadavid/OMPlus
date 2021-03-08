@@ -1,4 +1,4 @@
-function New-OMPlusBulkImport {
+Function New-OMPBulkImport {
     <#
     .SYNOPSIS
         Initiates a bulk import run of a CSV file into the New-OMPlusPrinter command.

@@ -1,4 +1,4 @@
-function Enable-OMPlusPrinter {
+Function Enable-OMPPrinter {
     <#
     .SYNOPSIS
         Enables a previously disabled printer in OMPlus

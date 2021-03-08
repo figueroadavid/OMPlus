@@ -1,5 +1,5 @@
 if ($PSVersionTable.PSVersion.Major -ge 5) {
-    function New-OMPlusPrinter {
+    Function New-OMPPrinter {
         <#
         .SYNOPSIS
             Creates printers for OMPlus
@@ -459,7 +459,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
     }
 }
 else {
-    function New-OMPlusPrinter {
+    Function New-OMPPrinter {
         <#
         .SYNOPSIS
             Creates printers for OMPlus

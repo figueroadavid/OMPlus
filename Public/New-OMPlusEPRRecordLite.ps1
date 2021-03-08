@@ -1,6 +1,6 @@
 if ($IsOMPLusPrimaryMPS) {
     if ($PSVersionTable.PSVersion.Major -ge 5) {
-        function New-OMPlusEPRRecordLite {
+        Function New-OMPEPRRecordLite {
             <#
             .SYNOPSIS
                 This will generate an OMPlus EPR record for the eps_map file
@@ -305,7 +305,7 @@ if ($IsOMPLusPrimaryMPS) {
         }
     }
     else {
-        function New-OMPlusEPRRecordLite {
+        Function New-OMPEPRRecordLite {
             <#
             .SYNOPSIS
                 This will generate an OMPlus EPR record for the eps_map file

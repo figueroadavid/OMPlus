@@ -1,4 +1,4 @@
-function New-OMPlusSampleBulkImportFile {
+Function New-OMPSampleBulkImportFile {
     <#
     .SYNOPSIS
         Generates a header file to create a new CSV file for bulk importing printers

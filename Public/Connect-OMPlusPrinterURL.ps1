@@ -1,5 +1,5 @@
 if ($PSVersionTable.PSVersion.Major -ge 5 ) {
-    function Connect-OMPlusPrinterURL {
+    Function Connect-OMPPrinterURL {
         <#
             .SYNOPSIS
                 Starts the printer web page
@@ -87,7 +87,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 ) {
     }
 }
 else {
-    function Connect-OMPlusPrinterURL {
+    Function Connect-OMPPrinterURL {
         <#
             .SYNOPSIS
                 Starts the printer web page
