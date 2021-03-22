@@ -36,7 +36,7 @@ Get-ChildItem -Path $PSScriptRoot\Public -File -Filter *.ps1 | Where-Object full
         . $_.FullName
     }
 if ($IsOMPLusPrimaryMPS) {
-    $Global:ValidTypes      = Get-OMPLusDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
+    $Global:ValidTypes      = Get-OMDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 }
 
 $Global:CRLF                = [Environment]::NewLine

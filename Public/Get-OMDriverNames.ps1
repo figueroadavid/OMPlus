@@ -1,5 +1,5 @@
 if ($IsOMPLusPrimaryMPS) {
-    Function Get-OMPDriverNames {
+    Function Get-OMDriverNames {
         <#
         .SYNOPSIS
             Retrieves the list of valid driver types for OMPlus
@@ -7,7 +7,7 @@ if ($IsOMPLusPrimaryMPS) {
             It locates the default installation path for OMPlus, and retrieves the OM_EPS_WIN_Queues.csv file.
             It then searches for all of the various types and returns the list of those types.
         .EXAMPLE
-            PS C:\> Get-OMPlusDriverNames
+            PS C:\> Get-OMDriverNames
             Driver                                                                   Display
             ------                                                                   -------
             ZDesignerAM400                                                           ZDesigner ZM400 200 dpi (ZPL)

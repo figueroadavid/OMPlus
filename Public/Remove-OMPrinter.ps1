@@ -1,11 +1,11 @@
-function  Remove-OMPlusPrinter {
+function  Remove-OMPrinter {
     <#
     .SYNOPSIS
         Remove a printer from OMPlus
     .DESCRIPTION
         Uses lpadmin to remove a print destination
     .EXAMPLE
-        PS C:\> Remove-OMPlusPrinter -PrinterName Printer1
+        PS C:\> Remove-OMPrinter -PrinterName Printer1
 
         Deletes the printer destination from OMPlus
     .INPUTS

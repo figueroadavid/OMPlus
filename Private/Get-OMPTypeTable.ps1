@@ -5,7 +5,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(Mandatory)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                    Get-OMDriverNames | Select-object -ExpandProperty 'Driver' |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {

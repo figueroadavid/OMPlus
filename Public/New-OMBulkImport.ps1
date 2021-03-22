@@ -1,15 +1,15 @@
-Function New-OMPBulkImport {
+Function New-OMBulkImport {
     <#
     .SYNOPSIS
-        Initiates a bulk import run of a CSV file into the New-OMPlusPrinter command.
+        Initiates a bulk import run of a CSV file into the New-OMPrinter command.
     .DESCRIPTION
         The script takes the FilePath, and imports the CSV File, and then sends each
-        CSV Record into New-OMPlusPrinter using powershell splatting of the available
+        CSV Record into New-OMPrinter using powershell splatting of the available
         paramters.
     .EXAMPLE
-        PS C:\> New-OMPlusBulkImport -FilePath c:\temp\omplusimport.csv -delimiter '|'
+        PS C:\> New-OMBulkImport -FilePath c:\temp\omplusimport.csv -delimiter '|'
 
-        Imports the pipe delimited list into New-OMPlusPrinter, thereby generating
+        Imports the pipe delimited list into New-OMPrinter, thereby generating
         the correct lpadmin commands to add the printer. If the CSV record contains a populated column
         for IsTesting, then the lpadmin commands are displayed rather than issued.
     .INPUTS
@@ -17,9 +17,9 @@ Function New-OMPBulkImport {
     .OUTPUTS
         none or [string]
     .NOTES
-        This initiates a bulk import of the import CSV file set up for New-OMPlusPrinter.
+        This initiates a bulk import of the import CSV file set up for New-OMPrinter.
         If the given CSV contains 'TRUE' or 'FALSE', they are converted to true powershell
-        boolen values ($true, $false).  New-OMPlusPrinter expects boolean values in certain
+        boolen values ($true, $false).  New-OMPrinter expects boolean values in certain
         fields which to not translate properly to text.
     .PARAMETER FilePath
         The path to the CSV file
@@ -71,7 +71,7 @@ Function New-OMPBulkImport {
                 }
                 Write-Progress @ProgSplat
             }
-            New-OMPlusPrinter @OMSplat
+            New-OMPrinter @OMSplat
         }
     }
 }

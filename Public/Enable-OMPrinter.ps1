@@ -1,15 +1,15 @@
-Function Disable-OMPPrinter {
+Function Enable-OMPrinter {
     <#
     .SYNOPSIS
-        Disables a printer in OMPlus
+        Enables a previously disabled printer in OMPlus
     .DESCRIPTION
-        Uses dccdisable.exe to disable printers in OMPlus
+        Uses dccenable.exe to enable a previously disable printer in OMPlus
     .EXAMPLE
-        PS C:\> Enable-OMPlusPrinter -PrinterName PRINTER01,PRINTER02
+        PS C:\> Enable-OMPrinter -PrinterName PRINTER01
 
-        Disables PRINTER01, and PRINTER02
+        Enables PRINTER01
     .PARAMETER PrinterName
-        The list of printers to disable
+        The list of printers to enable
     .PARAMETER ShowProgress
         A switch to show the progress of the command
     .INPUTS
@@ -29,12 +29,12 @@ Function Disable-OMPPrinter {
     )
 
     begin {
-        $PrinterList = Get-OMPlusPrinterList
+        $PrinterList = Get-OMPrinterList
         if ($ShowProgress) {
             $PrinterNameCount = $PrinterName.Count
             $CurrentCount = 0
         }
-        $DCCdisable = [system.io.path]::combine( $global:omhomepath, 'bin','dccenable.exe' )
+        $DCCEnable = [system.io.path]::combine( $global:omhomepath, 'bin','dccenable.exe' )
     }
 
     process {
@@ -42,7 +42,7 @@ Function Disable-OMPPrinter {
             if ($ShowProgress) {
                 $CurrentCount ++
                 $ProgSplat = @{
-                    Activity        = 'Disabling {0}' -f $Printer
+                    Activity        = 'Enabling {0}' -f $Printer
                     status          = '{0} of {1}' -f $CurrentCounter, $PrinterNameCount
                     PercentComplete = [math]::Round( $CurrentCount/$PrinterNameCount * 100, [System.MidpointRounding]::AwayFromZero)
                 }
@@ -50,7 +50,7 @@ Function Disable-OMPPrinter {
             }
             if ($Printer -in $PrinterList) {
                 $ProcSplat = @{
-                    FilePath        = $DCCDisable
+                    FilePath        = $DCCEnable
                     ArgumentList    = '-d {0}' -f $Printer
                     Wait            = $true
                     WindowStyle     = 'Hidden'

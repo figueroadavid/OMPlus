@@ -31,7 +31,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 LFtoCRLF 				= $true
                 InsertMissingFF 		= $true
             }
-            PS C:\> New-OMPLusPrinter @PrintSplat
+            PS C:\> New-OMPrinter @PrintSplat
             D:\Plustech\OMPlus\Server\\bin\lpadmin.exe -pTESTPRINTER -v10.0.4.112!9100 -omode="termserv" -opurgetime=45
             -ourl="http://10.0.4.112" -ometering=5000 -oPcap="c:\temp\test.pcap" -opagelimit=5 -onoteinfo="Test Notes" -z
             -owritetime=60 -ocmnt="Beaker" -obanner -oform="Letter" -olfc -onocopybreak -osupport="Support Notes"
@@ -99,7 +99,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             Sets a different translation table for the print jobs
         .PARAMETER Model
             Selects the correct type/model of driver for the printer.  The list of drivers can be obtained using the
-            Get-OMPlusDriverNames function.
+            Get-OMDriverNames function.
         .PARAMETER Mode
             Selects the correct print mode for the printer. Most printers use the default value of 'termserv'
             The complete list is:
@@ -179,7 +179,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                    Get-OMDriverNames | Select-object -ExpandProperty 'Driver' |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -383,15 +383,15 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     }
                     'CopyBreak'         {
                         switch ($CopyBreak) {
-                            $true   { $null = $ArgString.Add('-onocopybreak') }
-                            $false  { $null = $ArgString.Add('-ocopybreak')}
+                            $true   { $null = $ArgString.Add('-ocopybreak') }
+                            $false  { $null = $ArgString.Add('-onocopybreak')}
                         }
                         break
                     }
                     'FileBreak'         {
                         switch ($FileBreak) {
-                            $true   { $null = $ArgString.Add('-onofilebreak') }
-                            $false  { $null = $ArgString.Add('-ofilebreak')}
+                            $true   { $null = $ArgString.Add('-ofilebreak') }
+                            $false  { $null = $ArgString.Add('-onofilebreak')}
                         }
                         break
                     }
@@ -459,7 +459,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
     }
 }
 else {
-    Function New-OMPPrinter {
+    Function New-OMPrinter {
         <#
         .SYNOPSIS
             Creates printers for OMPlus
@@ -491,7 +491,7 @@ else {
                 LFtoCRLF 				= $true
                 InsertMissingFF 		= $true
             }
-            PS C:\> New-OMPLusPrinter @PrintSplat
+            PS C:\> New-OMPrinter @PrintSplat
             D:\Plustech\OMPlus\Server\\bin\lpadmin.exe -pTESTPRINTER -v10.0.4.112!9100 -omode="termserv" -opurgetime=45
             -ourl="http://10.0.4.112" -ometering=5000 -oPcap="c:\temp\test.pcap" -opagelimit=5 -onoteinfo="Test Notes" -z
             -owritetime=60 -ocmnt="Beaker" -obanner -oform="Letter" -olfc -onocopybreak -osupport="Support Notes"
@@ -559,7 +559,7 @@ else {
             Sets a different translation table for the print jobs
         .PARAMETER Model
             Selects the correct type of driver for the printer.  The list of drivers can be obtained using the
-            Get-OMPlusDriverNames function.  This script was written for Powershell 4.  Future versions will
+            Get-OMDriverNames function.  This script was written for Powershell 4.  Future versions will
             use ArgumentCompleters to pre-supply the available driver names.
         .PARAMETER Mode
             Selects the correct print mode for the printer. Most printers use the default value of 'termserv'
@@ -790,15 +790,15 @@ else {
                     }
                     'CopyBreak'         {
                         switch ($CopyBreak) {
-                            $true   { $null = $ArgString.Add('-onocopybreak') }
-                            $false  { $null = $ArgString.Add('-ocopybreak')}
+                            $true   { $null = $ArgString.Add('-ocopybreak') }
+                            $false  { $null = $ArgString.Add('-onocopybreak')}
                         }
                         break
                     }
                     'FileBreak'         {
                         switch ($FileBreak) {
-                            $true   { $null = $ArgString.Add('-onofilebreak') }
-                            $false  { $null = $ArgString.Add('-ofilebreak')}
+                            $true   { $null = $ArgString.Add('-ofilebreak') }
+                            $false  { $null = $ArgString.Add('-onofilebreak')}
                         }
                         break
                     }

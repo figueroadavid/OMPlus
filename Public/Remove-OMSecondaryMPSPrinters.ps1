@@ -1,4 +1,4 @@
-Function Remove-OMPSecondaryMPSPrinters {
+Function Remove-OMSecondaryMPSPrinters {
     [cmdletbinding(SupportsShouldProcess, DefaultParameterSetName = 'byDir')]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName = 'byFile')]
@@ -81,7 +81,7 @@ Function Remove-OMPSecondaryMPSPrinters {
                 if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '' )) {
                     Invoke-Command -ComputerName $OMPlusSecondaryMPS -ScriptBlock {
                         Import-Module -Name OMPlus
-                        Remove-OMPlusPrinter -PrinterName $Using:PrintersToRemove
+                        Remove-OMPrinter -PrinterName $Using:PrintersToRemove
                     }
                 }
 
@@ -94,7 +94,7 @@ Function Remove-OMPSecondaryMPSPrinters {
         else {
             $PSCmdMessage = 'Removing this printer list from {0}{1}{2}' -f $env:COMPUTERNAME, $CRLF, ($PrintersToRemove -join ',')
             if ($pscmdlet.ShouldProcess($PSCmdMessage, '', '')) {
-                Remove-OMPlusPrinter -PrinterName $PrintersToRemove
+                Remove-OMPrinter -PrinterName $PrintersToRemove
             }
         }
     }

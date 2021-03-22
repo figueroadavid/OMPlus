@@ -1,4 +1,4 @@
-function Update-OMPTransformServer {
+function Update-OMTransformServer {
     <#
     .SYNOPSIS
         It uses the pingmsg.exe utility to trigger updates on the Transform servers
@@ -8,7 +8,7 @@ function Update-OMPTransformServer {
         send the updates. The primary goal is to replicate the eps_map file from the .\system directory
         on the master print server to the .\constants folder on the transform servers.
     .EXAMPLE
-        PS C:\> Update-OMPlusTransformServer -Verbose
+        PS C:\> Update-OMlusTransformServer -Verbose
         Using pingmsg to update host: srvtran01
         Using pingmsg to update host: srvtran02
         Using pingmsg to update host: srvtran03

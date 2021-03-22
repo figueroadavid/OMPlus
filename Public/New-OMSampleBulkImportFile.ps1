@@ -1,4 +1,4 @@
-Function New-OMPSampleBulkImportFile {
+Function New-OMSampleBulkImportFile {
     <#
     .SYNOPSIS
         Generates a header file to create a new CSV file for bulk importing printers
@@ -12,7 +12,7 @@ Function New-OMPSampleBulkImportFile {
             OptionalParameter   = 'Comment','Notes','SupportNotes','DoNotValidate','IsTesting'
             IncludeComments     = $true
         }
-        PS C:\> New-OMPlusSampleBulkImportFile @BIFSplat
+        PS C:\> New-OMSampleBulkImportFile @BIFSplat
         Explanation of what the example does
     .PARAMETER FilePath
         The output location for the sample file
@@ -21,7 +21,7 @@ Function New-OMPSampleBulkImportFile {
     .PARAMETER PortType
         This differentiates between TCP and LPR type printing, the default is TCPPort
     .PARAMETER OptionalParameter
-        This is a list of the optional parameters usable for the New-OMPlusPrinter and New-OMPlusBulkImport.
+        This is a list of the optional parameters usable for the New-OMPrinter and New-OMBulkImport.
             'Comment', 'Notes', 'DoNotValidate', 'PurgeTime', 'PageLimit', 'SupportNotes',
             'WriteTimeout', 'TranslationTable', 'DriverType', 'PCAPPath', 'UserFilterPath',
             'Filter2', 'Filter3', 'CPSMetering', 'InsertMissingFF', 'FormType', 'LFtoCRLF',

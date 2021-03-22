@@ -1,8 +1,8 @@
-Function Remove-OMPEPRRecord {
+Function Remove-OMEPRRecord {
     [cmdletbinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [ValidateSet('Server', 'EPR Record', 'Queue', 'EPS Base', 'Tray', 'Simplex/Duplex', 'Paper Size', 'RX', 'Media Type')]
+        [ValidateSet('EPR Record', 'Queue', 'EPS Base', 'Tray', 'Simplex/Duplex', 'Paper Size', 'RX', 'Media Type')]
         [string]$MatchField,
 
         [parameter(ValueFromPipelineByPropertyName)]
@@ -108,9 +108,9 @@ Function Remove-OMPEPRRecord {
 
             if ($ReallyDoIt) {
                 $WarningThreshold = [math]::Round( $removalCSV.Count/$thisCSV.Count * 100, [System.MidpointRounding]::AwayFromZero)
-                if ($WarningThreshold -gt 1) {
+                if ($WarningThreshold -gt $ThresholdPercent) {
 
-                    $Message = 'This action will remove more than 1% of the records from eps_map'
+                    $Message = 'This action will remove more than {0}% of the records from eps_map' -f $ThresholdPercent
                     Write-Warning -Message $Message
 
                     if ($OverrideThreshold) {
@@ -118,7 +118,7 @@ Function Remove-OMPEPRRecord {
                     }
                     else {
                         $ProceedWithUpdate = $false
-                        $Message = 'The 1% threshold would be exceeded, and OverrideThreshold switch not specified; not updating the file'
+                        $Message = 'The {0} threshold would be exceeded, and OverrideThreshold switch not specified; not updating the file' -f $ThresholdPercent
                         Write-Warning -Message $Message
                     }
                 }
@@ -136,7 +136,7 @@ Function Remove-OMPEPRRecord {
 
                     Set-Content -Path $EPSPath -Value ($TopSection -join $CRLF)
 
-                    Update-OMPlusTransformServer
+                    Update-OMTransformServer
                 }
             }
             else {

@@ -1,6 +1,6 @@
 if ($IsOMPLusPrimaryMPS) {
     if ($PSVersionTable.PSVersion.Major -ge 5) {
-        Function New-OMPEPRRecord {
+        Function New-OMEPRRecord {
             <#
             .SYNOPSIS
                 This will generate an OMPlus EPR record for the eps_map file
@@ -8,9 +8,9 @@ if ($IsOMPLusPrimaryMPS) {
                 <work in progress>
             .EXAMPLE
                 PS C:\> $EPRSplat = @{
-                    ServerName = 'server01.domain.local'
-                    EPRQueueName    = 'PRINTER01'
-                    OMPlusQueueName = 'PRINTER01'
+                    ServerName      = 'server01.domain.local'
+                    EPRQueue        = 'PRINTER01'
+                    OMPlusQueue     = 'PRINTER01'
                     DriverName      = 'DellOPDPCL5'
                     TrayName        = 'Tray 1'
                     DuplexOption    = 'Horizontal'
@@ -18,17 +18,17 @@ if ($IsOMPLusPrimaryMPS) {
                     IsRX            = 'n'
                     MediaType       = 'Bond'
                 }
-                PS C:\> New-OMPlusEPRRecordLite @EPRSplat
+                PS C:\> New-OMEPRRecord @EPRSplat
                 server01.domain.local|PRINTER01|PRINTER01|DellOPDPCL5|!259|Horizontal|!1|n|!259
 
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
                 generated EPR record.
 
-            .PARAMETER EPRQueueName
+            .PARAMETER EPRQueue
                 The name of the EPR Queue in OMPlus
 
-            .PARAMETER OMPLusQueueName
+            .PARAMETER OMPlusQueue
                 The name of the OMPlus Queue name (this is the destination queue name).
 
             .PARAMETER DriverName
@@ -63,11 +63,15 @@ if ($IsOMPLusPrimaryMPS) {
 
             .PARAMETER Append
                 This switch tells the script to automatically append the record to the eps_map.
+                When the append switch is used, the Update-OMTransformServer function is called to update
+                all of the transform servers.
 
             .INPUTS
                 [string]
+
             .OUTPUTS
                 [string]
+
             .NOTES
                 For the TrayName, PaperSize, and MediaType fields, the supplied names are matched against the
                 available names in the types.conf file, and if more than one match is found, or if no matches
@@ -78,28 +82,16 @@ if ($IsOMPLusPrimaryMPS) {
             #>
             [cmdletbinding(SupportsShouldProcess)]
             param(
-                [parameter(ValueFromPipelineByPropertyName)]
-                [ValidateScript({
-                    if ($_ -match '^(\w+\.){1,}\w+\.\w+$') {
-                        Write-Verbose -Message ('{0} appears to be a valid FQDN' -f $_)
-                    }
-                    else {
-                        throw ('{0} appears to be an invalid FQDN; please verify your records when complete' -f $_)
-                    }
-                    $true
-                })]
-                [string]$ServerName = ([system.net.dns]::GetHostByName($env:computername).hostname),
-
                 [parameter(Mandatory)]
-                [string]$EPRQueueName,
+                [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$OMPLusQueueName,
+                [string]$OMPlusQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
                     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                        Get-OMPlusDriverNames | Select-object -ExpandProperty 'Driver' |
+                        Get-OMDriverNames | Select-object -ExpandProperty 'Driver' |
                         Where-Object { $_ -like "$WordToComplete*"} |
                         Sort-Object |
                         Foreach-Object {
@@ -116,7 +108,7 @@ if ($IsOMPLusPrimaryMPS) {
                 [parameter(ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
                     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                        Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays   | Select-object -ExpandProperty 'TrayRef' |
+                        Get-OMTypeTable -DriverType $DriverName -DisplayType Trays   | Select-object -ExpandProperty 'TrayRef' |
                         Where-Object { $_ -like "$WordToComplete*"} |
                         Sort-Object |
                         Foreach-Object {
@@ -137,7 +129,7 @@ if ($IsOMPLusPrimaryMPS) {
                 [parameter(ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
                     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                        Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes   | Select-object -ExpandProperty 'PaperSizeRef' |
+                        Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes   | Select-object -ExpandProperty 'PaperSizeRef' |
                         Where-Object { $_ -like "$WordToComplete*"} |
                         Sort-Object |
                         Foreach-Object {
@@ -158,7 +150,7 @@ if ($IsOMPLusPrimaryMPS) {
                 [parameter(ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
                     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                        Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaType   | Select-object -ExpandProperty 'MediaTypeRef' |
+                        Get-OMTypeTable -DriverType $DriverName -DisplayType MediaType   | Select-object -ExpandProperty 'MediaTypeRef' |
                         Where-Object { $_ -like "$WordToComplete*"} |
                         Sort-Object |
                         Foreach-Object {
@@ -173,24 +165,35 @@ if ($IsOMPLusPrimaryMPS) {
                 [string]$MediaType = 'None',
 
                 [parameter(ValueFromPipelineByPropertyName)]
+                [ValidateScript({
+                    if ($_ -match '^(\w+\.){1,}\w+\.\w+$') {
+                        Write-Verbose -Message ('{0} appears to be a valid FQDN' -f $_)
+                    }
+                    else {
+                        throw ('{0} appears to be an invalid FQDN; please verify your records when complete' -f $_)
+                    }
+                    $true
+                })]
+                [string]$ServerName = ([system.net.dns]::GetHostByName($env:computername).hostname),
+
+                [parameter(ValueFromPipelineByPropertyName)]
                 [switch]$Append
             )
 
             begin {
                 if ($Append) {
-                    $pingMsgPath = [system.io.path]::Combine($OMPlusBinPath, 'pingmsg.exe')
                     $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
                 }
-                $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
-                $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
-                $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
+                $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
+                $PaperSizeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes
+                $MediaTypeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType MediaTypes
             }
 
             process {
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
-                $thisRecord.Add($EPRQueueName)
-                $thisRecord.Add($OMPLusQueueName)
+                $thisRecord.Add($EPRQueue)
+                $thisRecord.Add($OMPlusQueue)
                 $thisRecord.Add($DriverName)
 
 
@@ -296,7 +299,7 @@ if ($IsOMPLusPrimaryMPS) {
                         Value = $thisRecord
                     }
                     Add-Content @AddSplat
-                    Update-OMPlusTransformServer
+                    Update-OMTransformServer
                 }
                 else {
                     $thisRecord
@@ -305,22 +308,22 @@ if ($IsOMPLusPrimaryMPS) {
         }
     }
     else {
-        Function New-OMPEPRRecord {
+        Function New-OMEPRRecord {
             <#
             .SYNOPSIS
                 This will generate an OMPlus EPR record for the eps_map file
             .DESCRIPTION
                 <work in progress>
             .EXAMPLE
-                PS C:\> New-OMPlusEPRRecordLite
+                PS C:\> New-OMEPRRecord
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
                 generated EPR record.
 
-            .PARAMETER EPRQueueName
+            .PARAMETER EPRQueue
                 The name of the EPR Queue in OMPlus
 
-            .PARAMETER OMPLusQueueName
+            .PARAMETER OMPlusQueue
                 The name of the OMPlus Queue name (this is the destination queue name).
 
             .PARAMETER DriverName
@@ -383,10 +386,10 @@ if ($IsOMPLusPrimaryMPS) {
                 [string]$ServerName = ([system.net.dns]::GetHostByName($env:computername).hostname),
 
                 [parameter(Mandatory)]
-                [string]$EPRQueueName,
+                [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$OMPLusQueueName,
+                [string]$OMPlusQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [string]$DriverName,
@@ -414,25 +417,20 @@ if ($IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $TransformHostPath  = [System.IO.Path]::Combine($OMPlusSystemPath, 'sendHosts')
-                    $TransformHosts     = Get-Content -Path $TransformHostPath
-                    Remove-Variable -Name TransformHostPath
-
-                    $pingMsgPath = [system.io.path]::Combine($OMPlusBinPath, 'pingmsg.exe')
                     $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
                 }
 
-                $TrayDictionary         = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType Trays
-                $PaperSizeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType PaperSizes
-                $MediaTypeDictionary    = Get-OMPlusTypeTable -DriverType $DriverName -DisplayType MediaTypes
+                $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
+                $PaperSizeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes
+                $MediaTypeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType MediaTypes
             }
 
             process {
 
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
-                $thisRecord.Add($EPRQueueName)
-                $thisRecord.Add($OMPLusQueueName)
+                $thisRecord.Add($EPRQueue)
+                $thisRecord.Add($OMPlusQueue)
                 $thisRecord.Add($DriverName)
 
 
@@ -538,7 +536,7 @@ if ($IsOMPLusPrimaryMPS) {
                         Value = $thisRecord
                     }
                     Add-Content @AddSplat
-                    Update-OMPlusTransformServer
+                    Update-OMTransformServer
                 }
                 else {
                     $thisRecord

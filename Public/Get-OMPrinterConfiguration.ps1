@@ -1,5 +1,5 @@
 if ($PSVersionTable.PSVersion.Major -ge 5) {
-    Function Get-OMPPrinterConfiguration {
+    Function Get-OMPrinterConfiguration {
         <#
         .SYNOPSIS
             Retrieves the properties of one or more configurations in OMPlus
@@ -7,7 +7,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             The utility reads the configuration file from the printer directory and converts the information
             into a PSCustomObject.
         .EXAMPLE
-            PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01
+            PS C:\> Get-OMPrinterConfiguration -PrinterName Printer01
 
             Printer          : Printer01
             Mode             : termserv
@@ -61,7 +61,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             PD               : n
 
         .EXAMPLE
-            PS C:\>Get-OMPlusPrinterConfiguration -PrinterName Printer1, Printer2 -Property Printer,URL,Mode
+            PS C:\>Get-OMPrinterConfiguration -PrinterName Printer1, Printer2 -Property Printer,URL,Mode
 
             Printer                         Mode                        URL
             -------                         ----                        ---
@@ -88,7 +88,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(Mandatory)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-OMPlusPrinterList |
+                    Get-OMPrinterList |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -134,7 +134,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
     }
 }
 else {
-    Function Get-OMPPrinterConfiguration {
+    Function Get-OMPrinterConfiguration {
         <#
         .SYNOPSIS
             Retrieves the properties of one or more configurations in OMPlus
@@ -142,7 +142,7 @@ else {
             The utility reads the configuration file from the printer directory and converts the information
             into a PSCustomObject.
         .EXAMPLE
-            PS C:\> Get-OMPlusPrinterConfiguration -PrinterName Printer01
+            PS C:\> Get-OMPrinterConfiguration -PrinterName Printer01
 
             Printer          : Printer01
             Mode             : termserv
@@ -196,7 +196,7 @@ else {
             PD               : n
 
         .EXAMPLE
-            PS C:\>Get-OMPlusPrinterConfiguration -PrinterName Printer1, Printer2 -Property Printer,URL,Mode
+            PS C:\>Get-OMPrinterConfiguration -PrinterName Printer1, Printer2 -Property Printer,URL,Mode
 
             Printer                         Mode                        URL
             -------                         ----                        ---

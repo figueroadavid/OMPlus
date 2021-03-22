@@ -1,11 +1,11 @@
-Function Get-OMPPrinterList {
+Function Get-OMPrinterList {
     <#
     .SYNOPSIS
         Retrieves a list of printers from OMPlus
     .DESCRIPTION
         It reads in the directory names in the 'printers' subdirectory in the OMPlusHome Path, and returns just the names
     .EXAMPLE
-        PS C:\> Get-OMPlusPrinterList
+        PS C:\> Get-OMPrinterList
         Printer01
         Printer02
         Printer03
@@ -17,7 +17,7 @@ Function Get-OMPPrinterList {
 
         Retrieves the list of printers in the directory
     .EXAMPLE
-        PS C:\> Get-OMPlusPrinterList -Filter printer*
+        PS C:\> Get-OMPrinterList -Filter printer*
         Printer01
         Printer02
         Printer03

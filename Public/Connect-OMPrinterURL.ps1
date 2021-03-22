@@ -1,12 +1,12 @@
 if ($PSVersionTable.PSVersion.Major -ge 5 ) {
-    Function Connect-OMPPrinterURL {
+    Function Connect-OMPrinterURL {
         <#
             .SYNOPSIS
                 Starts the printer web page
             .DESCRIPTION
                 Retrieves the printer configuration and launches the web page with the default browser.
             .EXAMPLE
-                PS C:\> Connect-OMPlusPrinterURL -PrinterName Printer1,Printer2
+                PS C:\> Connect-OMPrinterURL -PrinterName Printer1,Printer2
 
                 Launches the web page for Printer1, waits for 500ms, and launches the web page for Printer2
             .PARAMETER PrinterName
@@ -31,7 +31,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 ) {
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-OMPlusPrinterList |
+                    Get-OMPrinterList |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -67,7 +67,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 ) {
                     return
                 }
                 try {
-                    $thisConfig = Get-OMPlusPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
+                    $thisConfig = Get-OMPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
                     if ( [string]::IsNullOrEmpty($thisConfig.URL) -or [string]::IsNullOrWhiteSpace($thisConfig.URL)) {
                         Write-Warning -Message ('This printer ({0}) does not appear to have a web page defined' -f $Printer)
                         continue
@@ -87,14 +87,14 @@ if ($PSVersionTable.PSVersion.Major -ge 5 ) {
     }
 }
 else {
-    Function Connect-OMPPrinterURL {
+    Function Connect-OMPrinterURL {
         <#
             .SYNOPSIS
                 Starts the printer web page
             .DESCRIPTION
                 Retrieves the printer configuration and launches the web page with the default browser.
             .EXAMPLE
-                PS C:\> Connect-OMPlusPrinterURL -PrinterName Printer1,Printer2
+                PS C:\> Connect-OMPrinterURL -PrinterName Printer1,Printer2
 
                 Launches the web page for Printer1, waits for 500ms, and launches the web page for Printer2
             .PARAMETER PrinterName
@@ -141,7 +141,7 @@ else {
                     return
                 }
                 try {
-                    $thisConfig = Get-OMPlusPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
+                    $thisConfig = Get-OMPrinterConfiguration -PrinterName $Printer -ErrorAction Stop
                     if ( [string]::IsNullOrEmpty($thisConfig.URL) -or [string]::IsNullOrWhiteSpace($thisConfig.URL)) {
                         Write-Warning -Message ('This printer ({0}) does not appear to have a web page defined' -f $Printer)
                         continue

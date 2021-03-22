@@ -1,4 +1,4 @@
-Function Remove-OMPPrintJob {
+Function Remove-OMPrintJob {
     <#
     .SYNOPSIS
         Removes print jobs from the OMPlus queues
@@ -10,17 +10,17 @@ Function Remove-OMPPrintJob {
         4. Cancel jobs based on their status; it is restricted to 'can','intrd','activ' jobs
 
     .EXAMPLE
-        PS C:\> Remove-OMPlusPrintJob -RIDNumber 81000,RID23489,23765,RID81652,364
+        PS C:\> Remove-OMPrintJob -RIDNumber 81000,RID23489,23765,RID81652,364
 
         This cancels the jobs with the RID numbers of 81000, 23489, 23765, 81652, 00364.  If the job supplied is a 5 digit number, then
         the characters 'RID' are automatically prepended, along with enough 0's to pad the number out to 5 characters.
     .EXAMPLE
-        PS C:\> Remove-OMPlusPrintJob -JobAgeInMinutes 30
+        PS C:\> Remove-OMPrintJob -JobAgeInMinutes 30
 
         This cancels any jobs older than 30 minutes
 
     .EXAMPLE
-        PS C:\> Remove-OMPlusPrintJob -ByPrinter LB-100-100,BT-10-10
+        PS C:\> Remove-OMPrintJob -ByPrinter LB-100-100,BT-10-10
         Don't forget to re-enable this printer: LB-100-100
         Don't forget to re-enable this printer: BT-10-10
 
@@ -28,7 +28,7 @@ Function Remove-OMPPrintJob {
         This command is only usable on the Master Print Server.
 
     .EXAMPLE
-        PS C:\> Remove-OMPlusPrintJob -ByStatus intrd
+        PS C:\> Remove-OMPrintJob -ByStatus intrd
 
         This cancels all the jobs in an 'intrd' status
 

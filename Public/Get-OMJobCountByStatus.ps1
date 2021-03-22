@@ -1,11 +1,11 @@
-function Get-OMPJobCountByStatus {
+function Get-OMJobCountByStatus {
     <#
     .SYNOPSIS
         Provides the current status counts for the current server
     .DESCRIPTION
         Uses dccgrp.exe to get the list of jobs in each requested status and presents the list of statuses.
     .EXAMPLE
-        PS C:\> Get-OMPJobCountByStatus -Status all
+        PS C:\> Get-OMJobCountByStatus -Status all
         Name                           Value
         ----                           -----
         2big                           0
