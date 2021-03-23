@@ -700,5 +700,73 @@ If a printer is given a new name, then a new printer is created, rather than upd
 This function has not been heavily tested yet; it should be used with caution
 
 [Jump to Top](#)
+___
+
+### `Sync-OMSecondaryPrinters`
+
+This function uses dmdestsync.exe to either push a printer from the primary MPS server, or pull it from the secondary (depending on where it is run from).
+##### _Parameters_
+
+| <div class="colnobreak"> Parameter Name </div> | Description |
+| :-- | :-- |
+| <div class="colnobreak"> `-PrinterName`   </div> | The specific printer(s) to pull/push; if it is set to 'All', it will sync all of the printers. With _All_ printers, it is a slow process.  |
+| <div class="colnobreak"> `-ShowProgress`  </div> | This will display a progress bar showing the printers as they are synchronized. |
+
+##### _Example_
+
+```powershell
+PS C:\Sync-OMSecondaryPrinters -PrinterName Printer01, Printer02
+
+PS C:\Sync-OMSecondaryPrinters -PrinterName All
+The PrinterName list contains "All", this will take some time
+```
+
+[Jump to Top](#)
 
 ___
+
+### `Test-Port`
+
+This is a generic function to test the reponsiveness of a remote machine on a specific TCP port.
+
+##### _Parameters_
+
+| <div class="colnobreak"> Parameter Name </div> | Description |
+| :-- | :-- |
+| <div class="colnobreak"> `-ComputerName`           </div> | The resolvable name or ip address to test |
+| <div class="colnobreak"> `-TCPPort`                </div> | The TCP port to test; it is defaulted to TCP/9100; other typical ports to test are 515 for LPR/LPD, 80/443 for web pages etc.|
+| <div class="colnobreak"> `-TimeOutinMilliseconds`  </div> | The timeout that the script will wait for, before giving up and returning `$false`.  It is defaulted to 3000 (3 seconds). |
+
+##### _Example_
+
+```powershell
+PS C:\> Test-Port -ComputerName 10.10.10.10 -TCPPort 9100
+True
+PS C:\> Test-Port -ComputerName 10.10.10.10 -TCPPort 515
+True
+PS C:\> Test-Port -ComputerName 10.10.10.10 -TCPPort 80
+True
+PS C:\> Test-Port -ComputerName 10.10.10.10 -TCPPort 443
+False
+```
+
+[Jump to Top](#)
+
+___
+
+### `Update-OMTransformServer`
+
+This function triggers the automatic update of the `eps_map` and other files from the primary MPS server to the secondary MPS server.
+It happens automatically when the Save button in the EPR Records dialog is clicked.  If the `eps_map` file is updated, and this function is not called, the Transform Servers are not aware of the new printers and updated EPR Records.
+It reads the `sendHosts` file and uses `pingmessage.exe` against the hosts in that file.
+
+##### _Parameters_
+
+There are no parameters for this function
+
+##### _Example_
+```powershell
+PS C:\> Update-OMTransformServer
+```
+
+[Jump to Top](#)
