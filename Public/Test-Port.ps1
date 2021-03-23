@@ -7,7 +7,7 @@ function Test-Port
 
         [parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateRange(0,65535)]
-        [int]$TCPPort = 135,
+        [int]$TCPPort = 9100,
 
         [parameter(ValueFromPipelineByPropertyName = $true)]
         [int]$TimeOutInMilliseconds = 3000
