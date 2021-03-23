@@ -1,5 +1,5 @@
 if ($PSVersionTable.PSVersion.Major -ge 5) {
-    Function Get-OMPTypeTable {
+    Function Get-OMTypeTable {
         [cmdletbinding()]
         param(
             [parameter(Mandatory)]
@@ -64,7 +64,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
     }
 }
 else {
-    Function Get-OMPTypeTable {
+    Function Get-OMTypeTable {
         [cmdletbinding()]
         param(
             [parameter(Mandatory)]
