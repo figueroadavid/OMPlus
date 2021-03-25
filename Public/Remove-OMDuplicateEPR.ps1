@@ -66,8 +66,8 @@ function Remove-OMDuplicateEPR {
                 $RecordKey = '{0}_{1}' -f $thisRecord.EPR, $LineCounter.ToString()
                 $null = $DuplicateTracker.Add( $RecordKey, $thisLine )
                 if ($ShowDuplicateRecords) {
-                    $Message = 'Duplicate Record for {0} found at line {1}{2}{3}{4}' -f $thisRecord.EPR, $i.ToString(), [environment]::NewLine, $tab, ($thisRecord -join '|')
-                    Write-Verbose -Message $Message -Verbose
+                    $Message = 'Duplicate record for {0} found at line {1}{2}{3}{3}{3}{3}{4}' -f $thisRecord.EPR, $i.ToString(), [environment]::NewLine, $tab, ($thisRecord -join '|')
+                    Write-Verbose -Message $Message
                 }
             }
             else {

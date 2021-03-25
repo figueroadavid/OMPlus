@@ -6,45 +6,47 @@
 Wrapper module for [OMPlus for Windows](https://www.plustechnologies.com)
 
 The module is written to provide a powershell friendly wrapper for the various binary utilities for OMplus on Windows.
+Some additional functionality that does not exist is also added.
 Here are the base functions provided
 
-<table class="nobordertable">
+<table>
     <tr>
-        <td> <a href="#connect-omprinterurl">Connect-OMPrinterURL</a> </td>
-        <td> <a href="#new-OMbulkimport">New-OMBulkImport</a> </td>
-        <td> <a href="#remove-OMprintjob">Remove-OMPrintJob</a> </td>
+        <th><a href="#Connect-OMPrinterURL">Connect-OMPrinterURL</a></th>
+        <th><a href="#New-OMBulkImport">New-OMBulkImport</a></th>
+        <th><a href="#Remove-OMPrintJob">Remove-OMPrintJob</a></th>
     </tr>
     <tr>
-        <td> <a href="#disable-OMprinter">Disable-OMPrinter</a> </td>
-        <td> <a href="#new-OMEPRRecord">New-OMEPRRecord</a> </td>
-        <td> <a href="#remove-omsecondaryeprrecord">Remove-OMSecondaryMPSPrinter</a> </td>
+        <th><a href="#Disable-OMPrinter">Disable-OMPrinter</a></th>
+        <th><a href="#New-OMEPRRecord">New-OMEPRRecord</a></th>
+        <th><a href="#Remove-OMSecondaryMPSPrinter">Remove-OMSecondaryMPSPrinter</a></th>
     </tr>
     <tr>
-        <td>  <a href="#enable-OMprinter">Enable-OMPrinter</a> </td>
-        <td> <a href="#new-OMprinter">New-OMPrinter</a> </td>
-        <td> <a href="#Set-OMPrinter">Set-OMPrinter</a> </td>
+        <th><a href="#Enable-OMPrinter">Enable-OMPrinter</a></th>
+        <th><a href="#New-OMPrinter">New-OMPrinter</a></th>
+        <th><a href="#Set-OMPrinter">Set-OMPrinter</a></th>
     </tr>
     <tr>
-        <td> <a href="#get-OMdrivernames">Get-OMDriverNames</a> </td>
-        <td> <a href="#new-OMsamplebulkimportfile">New-OMSampleBulkImportFile</a> </td>
-        <td> <a href="#sync-omsecondaryprinters">Sync-OMSecondaryPrinters</a> </td>
+        <th><a href="#Get-OMDriverNames">Get-OMDriverNames</a></th>
+        <th><a href="#New-OMSampleBulkImportFile">New-OMSampleBulkImportFile</a></th>
+        <th><a href="#Sync-OMSecondaryPrinters">Sync-OMSecondaryPrinters</a></th>
     </tr>
     <tr>
-        <td> <a href="#get-omjobcountbystatus">Get-OMJobCountByStatus</a> </td>
-        <td> <a href="#remove-omeperrecord">Remove-OMEPRRecord</a> </td>
-        <td> <a href="#test-port">Test-Port</a> </td>
+        <th><a href="#Get-OMJobCountByStatus">Get-OMJobCountByStatus</a></th>
+        <th><a href="#Remove-OMDuplicateEPR">Remove-OMDuplicateEPR</a></th>
+        <th><a href="#Test-Port">Test-Port</a></th>
     </tr>
     <tr>
-        <td> <a href="#get-OMprinterconfiguration">Get-OMPrinterConfiguration</a> </td>
-        <td> <a href="#Remove-OMPrinter">Remove-OMPrinter</a> </td>
-        <td> <a href="#update-omtransformserver">Update-OMTransformServer</a> </td>
+        <th><a href="#Get-OMPrinterConfiguration">Get-OMPrinterConfiguration</a></th>
+        <th><a href="#Remove-OMEPRRecord">Remove-OMEPRRecord</a></th>
+        <th><a href="#Update-OMEPRRecord">Update-OMEPRRecord</a></th>
     </tr>
     <tr>
-        <td><a href="#get-OMprinterlist">Get-OMPrinterList</a> </td>
-        <td></td>
-        <td></td>
-    <td>
+        <th><a href="#Get-OMPrinterList">Get-OMPrinterList</a></th>
+        <th><a href="#Remove-OMPrinter">Remove-OMPrinter</a></th>
+        <th><a href="#Update-OMTransformServer">Update-OMTransformServer</a></th>
+    </tr>
 </table>
+
 
 ## Functions
 
@@ -363,7 +365,6 @@ PS C:\> New-OMEPRRecord @EPRSplat -Append
 
 ___
 
-
 ### `New-OMPrinter`
 
 Creates a new OMPlus printer
@@ -503,7 +504,42 @@ PrinterName,IPAddress,TCPPort,HasInternalWebServer,ForceWebServer,DriverType,DoN
 
 ___
 
+### `Remove-OMDuplicateEPR`
+
+This function scans the eps_map file and removes duplicate entries based on the EPR Queue name
+
+##### _Parameters_
+
+| Parameter Name        | Description |
+| :-------------        | :---------- |
+| `ShowDuplicateRecords | This shows the duplicate records as they are found, and returns a table of the duplicate records found at the end.  The original records are not returned. The temporary file created is then copied over the eps_map file and the Update-OMTransformServer function is called|
+
+##### _Example_
+
+```powershell
+PS C:\> Remove-OMDuplicateEPR -ShowDuplicateRecords -Verbose
+VERBOSE:    Duplicate record for PRINTER01 found at line 35
+                omplusserver01.domain.local|PRINTER01|PRINTER01|XeroxUPDPCL6|!260||!1|n|
+VERBOSE:    Duplicate record for PRINTER02 found at line 85
+                omplusserver01.domain.local|PRINTER02|PRINTER02|XeroxUPDPCL6|!260||!1|n|
+Name            Value
+----            -----
+PRINTER01_35    omplusserver01.domain.local|PRINTER01|PRINTER01|XeroxUPDPCL6|!260||!1|n|
+PRINTER02_85    omplusserver01.domain.local|PRINTER02|PRINTER02|XeroxUPDPCL6|!260||!1|n|
+
+PS C:\> Remove-OMDuplicateEPR -ShowDuplicateRecords
+Name            Value
+----            -----
+PRINTER01_35    omplusserver01.domain.local|PRINTER01|PRINTER01|XeroxUPDPCL6|!260||!1|n|
+PRINTER02_85    omplusserver01.domain.local|PRINTER02|PRINTER02|XeroxUPDPCL6|!260||!1|n|
+```
+
+[Jump to Top :arrow_up:](#)
+
+___
+
 ### `Remove-OMEPRRecord`
+
 This removes EPR Records from the `eps_map` file, and notifies the Transform servers of the record removal
 This is an especially risky function, and has multiple built in safety precautions.
 The first step it takes is to create a backup of the `eps_map` file, with a naming convention of: `eps_map_datetime.bkp`
