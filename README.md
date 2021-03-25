@@ -1,3 +1,4 @@
+
 # OMPlus Delivery Manager
 
 ![OMPlusLogo](https://www.plustechnologies.com/wp-content/uploads/2015/01/logo-plustechnologies.png)
@@ -371,37 +372,37 @@ Creates a new OMPlus printer
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-|`-PrinterName` | The name of the printer to create|
-|`-IPAddress` | The IP address of the printer; `lpadmin.exe` does not require an IP address depending on the printer type, but the vast majority of printers managed by OMPlus are on the network and do need IP Addresses.  The script validates the number is in the range of `0-65535`|
-|`-TCPPort` | The TCP port used for the printer; it defaults to `9100`|
-|`-LPRPort` | The name of the LPD/LPR queue; if this is used the script will replace the TCPPort with the LPRPort queue name|
-|`-Comment` | This supplies the comment (`-ocmt`) parameter;|
-|`-HasInternalWebServer` | This sets the _`Has Internal Web Server`_ flag for the printer; if _`CustomURL`_ is not supplied, the script tests for a web page on port `80`(`http`), and then on port `443`(`https`) if `80` does not respond; (`-ourl`)|
-|`-CustomURL` | This is used with the _HasInternalWebServer_ to set the -ourl parameter, and must be used if the web page is not accessed by the IP address on a standard `http`(`80`) or `https`(`443`) port|
-|`-ForceWebServer` | Used in combination with _HasInternalWebServer_ to set the `-ourl` port without verifying that the URL responds (http, https, custom)|
-|`-PurgeTime` | Overrides the default purge time from the system for the printer; this value is in seconds (`-opurgetime`)|
-|`-PageLimit` | Overrides the default page limit from the system for the printer (`-opagelimit`)|
-|`-Notes` | This supplies the the Notes field (`-onoteinfo`)|
-|`-SupportNotes` | Supplies the Support Notes field (`-osupport`)|
-|`-WriteTimeout` | Overrides the default timeout value for print jobs for this printer (`-owritetimeout`)|
-|`-TranslationTable` | Overrides the default translation table for the system for this printer (`-otrantrable`)|
-|`-DriverType` | Sets the correct driver type; this script was written for Powershell 4; the administrator needs to first get the correct driver types to set the list for `[ValidateSet()]`; however, future versions will automatically prepopulate this list with ArgumentCompleters (`-oPT`)|
-|`-Mode = 'termserv'` | Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)|
-|`-FormType` | Overrides the default form type for the printer (`-oform`)|
-|`-PCAPPath` | Enables the PCAP capture for the printer, and sets the file path for the capture file (`-oPcap`)|
-|`-UserFilterPath` | Sets a user defined filter script for print jobs (`-ousrfilter`); the file must exist on the system|
-|`-Filter2` | Sets a secondary user defined filter script for print jobs (`-ofilter2`); the file must exist on the system|
-|`-Filter3` | Sets a secondary user defined filter script for print jobs (`-ofilter3`); the file must exist on the system|
-|`-CPSMetering` | Overrides the default characters per second metering for printer (`-ometering`)|
-|`-Banner` | If used, and set to \$true, then `-obanner` is used and banner pages are injected between print jobs, if set to $false, then `-onobanner` is used|
-|`-DoNotValidate` | Sets the -z flag so that lpadmin does not try to verify the printer's existence|
-|`-LFtoCRLF` | If used, and set to \$true, then `-olfc` is used and LF characters are converted to CRLF characters, if set to $false, then `-onolfc` is used|
-|`-CopyBreak` | If used, and set to \$true, then `-ocopybreak` is used and page breaks are inserted between print jobs, and if set to $false `-onocopybreak` is used, and page breaks are removed from between print jobs|
-|`-FileBreak` | If used, and set to \$true, then `-ofilebreak` is used and page breaks are inserted between files submitted, and if set to $false, then `-onofilebreak` is used and page breaks between files are removed|
-|`-InsertMissingFF` | If used, then if form feeds are missing between jobs, then they are inserted (`-ofilesometimes`)|
-|`-IsTesting` | if used, displays the generated command line without actually creating the printer|
-|`-IsFullTesting` | if used, displays all the supplied parameters, and then displays the generated command line|
-|`-IsForEpic` | if used, it _sanitizes_ the record to match Epic standards - letters are converted to upper case, and spaces are replaced with hypens|
+|`PrinterName` | The name of the printer to create|
+|`IPAddress` | The IP address of the printer; `lpadmin.exe` does not require an IP address depending on the printer type, but the vast majority of printers managed by OMPlus are on the network and do need IP Addresses.  The script validates the number is in the range of `0-65535`|
+|`TCPPort` | The TCP port used for the printer; it defaults to `9100`|
+|`LPRPort` | The name of the LPD/LPR queue; if this is used the script will replace the TCPPort with the LPRPort queue name|
+|`Comment` | This supplies the comment (`-ocmt`) parameter;|
+|`HasInternalWebServer` | This sets the _`Has Internal Web Server`_ flag for the printer; if _`CustomURL`_ is not supplied, the script tests for a web page on port `80`(`http`), and then on port `443`(`https`) if `80` does not respond; (`-ourl`)|
+|`CustomURL` | This is used with the _HasInternalWebServer_ to set the -ourl parameter, and must be used if the web page is not accessed by the IP address on a standard `http`(`80`) or `https`(`443`) port|
+|`ForceWebServer` | Used in combination with _HasInternalWebServer_ to set the `-ourl` port without verifying that the URL responds (http, https, custom)|
+|`PurgeTime` | Overrides the default purge time from the system for the printer; this value is in seconds (`-opurgetime`)|
+|`PageLimit` | Overrides the default page limit from the system for the printer (`-opagelimit`)|
+|`Notes` | This supplies the the Notes field (`-onoteinfo`)|
+|`SupportNotes` | Supplies the Support Notes field (`-osupport`)|
+|`WriteTimeout` | Overrides the default timeout value for print jobs for this printer (`-owritetimeout`)|
+|`TranslationTable` | Overrides the default translation table for the system for this printer (`-otrantrable`)|
+|`DriverType` | Sets the correct driver type; this script was written for Powershell 4; the administrator needs to first get the correct driver types to set the list for `[ValidateSet()]`; however, future versions will automatically prepopulate this list with ArgumentCompleters (`-oPT`)|
+|`Mode = 'termserv'` | Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)|
+|`FormType` | Overrides the default form type for the printer (`-oform`)|
+|`PCAPPath` | Enables the PCAP capture for the printer, and sets the file path for the capture file (`-oPcap`)|
+|`UserFilterPath` | Sets a user defined filter script for print jobs (`-ousrfilter`); the file must exist on the system|
+|`Filter2` | Sets a secondary user defined filter script for print jobs (`-ofilter2`); the file must exist on the system|
+|`Filter3` | Sets a secondary user defined filter script for print jobs (`-ofilter3`); the file must exist on the system|
+|`CPSMetering` | Overrides the default characters per second metering for printer (`-ometering`)|
+|`Banner` | If used, and set to \$true, then `-obanner` is used and banner pages are injected between print jobs, if set to $false, then `-onobanner` is used|
+|`DoNotValidate` | Sets the -z flag so that lpadmin does not try to verify the printer's existence|
+|`LFtoCRLF` | If used, and set to \$true, then `-olfc` is used and LF characters are converted to CRLF characters, if set to $false, then `-onolfc` is used|
+|`CopyBreak` | If used, and set to \$true, then `-ocopybreak` is used and page breaks are inserted between print jobs, and if set to $false `-onocopybreak` is used, and page breaks are removed from between print jobs|
+|`FileBreak` | If used, and set to \$true, then `-ofilebreak` is used and page breaks are inserted between files submitted, and if set to $false, then `-onofilebreak` is used and page breaks between files are removed|
+|`InsertMissingFF` | If used, then if form feeds are missing between jobs, then they are inserted (`-ofilesometimes`)|
+|`IsTesting` | if used, displays the generated command line without actually creating the printer|
+|`IsFullTesting` | if used, displays all the supplied parameters, and then displays the generated command line|
+|`IsForEpic` | if used, it _sanitizes_ the record to match Epic standards - letters are converted to upper case, and spaces are replaced with hypens|
 
 ##### _Example_
 
