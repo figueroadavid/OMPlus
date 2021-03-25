@@ -387,7 +387,7 @@ Creates a new OMPlus printer
 |`WriteTimeout` | Overrides the default timeout value for print jobs for this printer (`-owritetimeout`)|
 |`TranslationTable` | Overrides the default translation table for the system for this printer (`-otrantrable`)|
 |`DriverType` | Sets the correct driver type; this script was written for Powershell 4; the administrator needs to first get the correct driver types to set the list for `[ValidateSet()]`; however, future versions will automatically prepopulate this list with ArgumentCompleters (`-oPT`)|
-|`Mode = 'termserv'` | Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)|
+|`Mode` | Defaults to `termserv`; `LPRPort` is also supplied, this is changed to 'netprint' (`-omode`)|
 |`FormType` | Overrides the default form type for the printer (`-oform`)|
 |`PCAPPath` | Enables the PCAP capture for the printer, and sets the file path for the capture file (`-oPcap`)|
 |`UserFilterPath` | Sets a user defined filter script for print jobs (`-ousrfilter`); the file must exist on the system|
