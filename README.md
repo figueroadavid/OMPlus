@@ -1,4 +1,3 @@
-
 # OMPlus Delivery Manager
 
 ![OMPlusLogo](https://www.plustechnologies.com/wp-content/uploads/2015/01/logo-plustechnologies.png)
@@ -56,9 +55,9 @@ Reads in the printer configuration, and if possible, launches the default browse
 
 | Parameter Name                | Description   |
 | :-------------                | :-----------  |
-| `-PrinterName`  			    | This is the list of printers from which the system will open their status web pages |
-| `-DelayBetweenPrintersInMS `  | This is the amount of delay between launching the printer web pages.  This gives the browser some time to establish the connection, without becoming overwhelmed |
-| `-SafetyThreshold`	        | This is the maximum number of pages the function will attempt to open.  This is a safety measure to prevent the browser and the system from being overwhelmed with requests to open web pages. |
+| `PrinterName`  			    | This is the list of printers from which the system will open their status web pages |
+| `DelayBetweenPrintersInMS `  | This is the amount of delay between launching the printer web pages.  This gives the browser some time to establish the connection, without becoming overwhelmed |
+| `SafetyThreshold`	        | This is the maximum number of pages the function will attempt to open.  This is a safety measure to prevent the browser and the system from being overwhelmed with requests to open web pages. |
 
 [Jump to Top :arrow_up:](#)
 
@@ -73,8 +72,8 @@ Disables a printer in OMPlus
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-| `-PrinterName`| Accepts 1 or more printer names to disnable; if a printer does not exist, then a warning is written, and the printer is skipped |
-| `-ShowProgress`| Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
+| `PrinterName`| Accepts 1 or more printer names to disnable; if a printer does not exist, then a warning is written, and the printer is skipped |
+| `ShowProgress`| Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
 
 ##### _Example_
 
@@ -94,8 +93,8 @@ Enables a previously disabled printer in OMPlus.
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-| `-PrinterName`| Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped |
-| `-ShowProgress`| Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
+| `PrinterName`| Accepts 1 or more printer names to enable; if a printer does not exist, then a warning is written, and the printer is skipped |
+| `ShowProgress`| Writes a progress bar to show the progress of the cmdlet; this is useful when enabling a large number of printers |
 
 
 
@@ -145,8 +144,8 @@ Retrieves the count of jobs in a given status; the statuses are returned in a ha
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-| `-PrinterName`| Accepts 1 or more printer names from which to retrieve the configuration |
-| `-Property`| Accepts a list of 1 or more property names to return in the PSCustomObject |
+| `PrinterName`| Accepts 1 or more printer names from which to retrieve the configuration |
+| `Property`| Accepts a list of 1 or more property names to return in the PSCustomObject |
 
 ##### _Example_
 
@@ -199,8 +198,8 @@ Reads the configuration of a printer in OMPlus and returns the contents of the c
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-| `-PrinterName`| Accepts 1 or more printer names from which to retrieve the configuration |
-| `-Property`| Accepts a list of 1 or more property names to return in the PSCustomObject |
+| `PrinterName`| Accepts 1 or more printer names from which to retrieve the configuration |
+| `Property`| Accepts a list of 1 or more property names to return in the PSCustomObject |
 
 ##### _Example_
 
@@ -271,7 +270,7 @@ Gets and returns the list of printers in OMPlus
 
 | Parameter Name  | Description |
 | :-------------- | :---------- |
-| `-Filter`| This is passed to Get-ChildItem as a _filter_; this follows the old `DOS` conventions for wildcards |
+| `Filter`| This is passed to Get-ChildItem as a _filter_; this follows the old `DOS` conventions for wildcards |
 
 ##### _Example_
 
@@ -306,8 +305,8 @@ Reads in a CSV file of printers and feeds them into the New-OMPrinter function t
 
 | Parameter Name  | Description |
 | :-------------- | :---------- |
-| `-FilePath`| The path to the CSV file to read in |
-| `-Delimter`| The character used to separate the fields, it defaults to a commma |
+| `FilePath`| The path to the CSV file to read in |
+| `Delimter`| The character used to separate the fields, it defaults to a commma |
 
 ##### _Example_
 
@@ -329,16 +328,16 @@ Depending on the version of Powershell used (> 5), the parameter names will prov
 
 | Parameter Name | Description |
 | :-------------- | :---------- |
-| `-ServerName` | The name of the server that will host the EPR Record; defaults to the current machine; Having the correct servername isn't *critical* per-se; the OMPlus system will automatically update the record |
-| `-EPRQueueName` | The name of the EPR Queue Name for the Record; there can be multiple EPRQueueNames per OMPlusQueueName |
-| `-OMQueueName` | The queue/destination name in OMPlus |
-| `-DriverName` | The name of the driver used in the system; this name _is **case-sensitive**_; this name comes from the _Types_ list in the OMPlus Administration tool |
-| `-TrayName` | This is the name of the tray to use.  It must match the trays available in the `types.conf`. |
-| `-DuplexOption` | This is the Duplex option setting in the _Epic Print Record_ tool; it comes from the `types.conf` file; it can be _None_ (which is blank), _Simplex_, _Horizontal_ (Short Edge), or _Vertical_ (Long Edge) |
-| `-PaperSize` | This is the size of the paper; it also comes from the `types.conf` file |
-| `-IsRx` | Sets the flag if the EPR is designated for prescriptions, it defaults to 'n'; which is unchecked in the EPR tool |
-| `-MediaType` | Determines which media type the printer is using.  It defaults to 'none' |
-| `-Append` | This tells the function to end the EPR record to the end of the `eps_map` file and calls the `Update-OMTransformServer` function to notify the Transform servers of the change(s) |
+| `ServerName` | The name of the server that will host the EPR Record; defaults to the current machine; Having the correct servername isn't *critical* per-se; the OMPlus system will automatically update the record |
+| `EPRQueueName` | The name of the EPR Queue Name for the Record; there can be multiple EPRQueueNames per OMPlusQueueName |
+| `OMQueueName` | The queue/destination name in OMPlus |
+| `DriverName` | The name of the driver used in the system; this name _is **case-sensitive**_; this name comes from the _Types_ list in the OMPlus Administration tool |
+| `TrayName` | This is the name of the tray to use.  It must match the trays available in the `types.conf`. |
+| `DuplexOption` | This is the Duplex option setting in the _Epic Print Record_ tool; it comes from the `types.conf` file; it can be _None_ (which is blank), _Simplex_, _Horizontal_ (Short Edge), or _Vertical_ (Long Edge) |
+| `PaperSize` | This is the size of the paper; it also comes from the `types.conf` file |
+| `IsRx` | Sets the flag if the EPR is designated for prescriptions, it defaults to 'n'; which is unchecked in the EPR tool |
+| `MediaType` | Determines which media type the printer is using.  It defaults to 'none' |
+| `Append` | This tells the function to end the EPR record to the end of the `eps_map` file and calls the `Update-OMTransformServer` function to notify the Transform servers of the change(s) |
 
 ##### _Example_
 
@@ -456,11 +455,11 @@ This creates a sample csv file that is appropriate to import into `New-OMBulkImp
 
 | Parameter Name| Description |
 | :-- | :-- |
-| `-FilePath` | The output path for the sample file |
-| `-Delimiter` | A single character delimiter for the output file; it defaults to a comma (`,`) |
-| `-PortType` | Defaults to `TCPPort`, the other option is `LPRPort` |
-| `-IncludeComments` | This adds a series of comments for the optional _Parameters_ giving explanations to those _Parameters_ |
-| `-OptionalParameter` | A list of the available optional_Parameters_ to include in the output file; |
+| `FilePath` | The output path for the sample file |
+| `Delimiter` | A single character delimiter for the output file; it defaults to a comma (`,`) |
+| `PortType` | Defaults to `TCPPort`, the other option is `LPRPort` |
+| `IncludeComments` | This adds a series of comments for the optional _Parameters_ giving explanations to those _Parameters_ |
+| `OptionalParameter` | A list of the available optional_Parameters_ to include in the output file; |
 
 | Options                |                  |                   |                    |
 | :------                | ----             | ----              | ----               |
@@ -513,12 +512,12 @@ The datetime syntax used is `yyMMdd_hhmmss`; so the current name as of this writ
 
 | Parameter Name              | Description |
 | :-------------------------------------------              | :---------- |
-| `-MatchField`              | The name of the field used to determine which records to select for deleting. It is predefined as `EPR Record`, `Queue`, `EPS Base`, `Tray`, `Simplex/Duplex`, `Paper Size`, `RX`, `Media Type`|
-| `-MatchType`               | This determines if the match should be a _simple match_ or a _regular expressions_ match; it defaults to _simple_|
-| `-MatchPattern`            | This is the text string to define the matching pattern used by the `MatchType` |
-| `-ReallyDoIt`              | This tells the function that you really do intend to make this change; this is one of the important safety switches |
-| `-ThreshholdPercent`       | By default, this is set to 1 (percent), if the function will remove more than this percentage of the records, it will error out and not perform the function; this is another critical safety switch to this function |
-| `-OverrideThreshold`       | This switch tells the function to ignore the `ThreshholdPercent` switch; this is a very dangerous switch, and must be used with extreme caution |
+| `MatchField`              | The name of the field used to determine which records to select for deleting. It is predefined as `EPR Record`, `Queue`, `EPS Base`, `Tray`, `Simplex/Duplex`, `Paper Size`, `RX`, `Media Type`|
+| `MatchType`               | This determines if the match should be a _simple match_ or a _regular expressions_ match; it defaults to _simple_|
+| `MatchPattern`            | This is the text string to define the matching pattern used by the `MatchType` |
+| `ReallyDoIt`              | This tells the function that you really do intend to make this change; this is one of the important safety switches |
+| `ThreshholdPercent`       | By default, this is set to 1 (percent), if the function will remove more than this percentage of the records, it will error out and not perform the function; this is another critical safety switch to this function |
+| `OverrideThreshold`       | This switch tells the function to ignore the `ThreshholdPercent` switch; this is a very dangerous switch, and must be used with extreme caution |
 
 ##### _Example_
 
@@ -560,6 +559,7 @@ PRINTER03
 PRINTER04
 MYPRINTER01
 ....
+ZZPRINTER50
 
 This action will remove more than 1% of the records from eps_map
 
@@ -575,7 +575,7 @@ This uses `lpadmin.exe` to delete the given printers by name; when the printers 
 
 | Parameter Name | Description |
 | -- | -- |
-| `-PrinterName` | The list of printers to remove |
+| `PrinterName` | The list of printers to remove |
 
 ##### _Example_
 
@@ -604,15 +604,15 @@ This function deletes print jobs that exists in the system. It has 4 modes of op
 
 | Parameter Name | Description |
 | :-- | :-- |
-| `-RIDNumber` | [by RID number] The RIDNumber(s) of the print jobs to delete |
-| `-ImmediatePurge` | [by RID number] adds the flag to automatically purges the jobs |
-| `-JobAgeInMinutes` | [by Job Age] Jobs older than this number of minutes in age are cancelled |
-| `-PrinterName` | [by the printer] This printer is reset, cancelling the jobs on this printer and disabling the printer |
-| `-ResetSNMP` | [by the printer] Adds the flag to reset the SNMP data |
-| `-ResetLock` | [by the printer] Adds the flag to reset the lock data |
-| `-ResetToInactive` | [by the printer] Adds the flag to reset the printer, and set it to disabled |
-| `-ResetActive` | [by the printer] Adds the flag to reset the printer, and set it back to enabled |
-| `-Status` | [by Job Status] The jobs with this status are cancelled |
+| `RIDNumber` | [by RID number] The RIDNumber(s) of the print jobs to delete |
+| `ImmediatePurge` | [by RID number] adds the flag to automatically purges the jobs |
+| `JobAgeInMinutes` | [by Job Age] Jobs older than this number of minutes in age are cancelled |
+| `PrinterName` | [by the printer] This printer is reset, cancelling the jobs on this printer and disabling the printer |
+| `ResetSNMP` | [by the printer] Adds the flag to reset the SNMP data |
+| `ResetLock` | [by the printer] Adds the flag to reset the lock data |
+| `ResetToInactive` | [by the printer] Adds the flag to reset the printer, and set it to disabled |
+| `ResetActive` | [by the printer] Adds the flag to reset the printer, and set it back to enabled |
+| `Status` | [by Job Status] The jobs with this status are cancelled |
 
 ##### _Examples_
 
@@ -642,12 +642,12 @@ operation.
 
 | Parameter Name | Description |
 | :-- | :-- |
-| `-PrimaryPrinterFile` | [byFile] The file containing the list of printers from the primary MPS server |
-| `-SecondaryPrinterFile` | [byFile] The file containing the list of printers from the secondary MPS server |
-| `-PrimaryMPSPrinterDirectory` | [byDir] The directory containing the printers from the primary MPS server; it uses the environment variables set by the module to locate the printers by default |
-| `-SecondaryMPSPrinterDirectory` | [byDir] The directory containing the printers from the secondary MPS server; it uses the environment variables set by the module to locate the printers by default |
-| `-PrimaryList` | [byList] The list of printers from the primary MPS server |
-| `-SecondaryList` | [byList] The list of printers from the secondary MPS server |
+| `PrimaryPrinterFile` | [byFile] The file containing the list of printers from the primary MPS server |
+| `SecondaryPrinterFile` | [byFile] The file containing the list of printers from the secondary MPS server |
+| `PrimaryMPSPrinterDirectory` | [byDir] The directory containing the printers from the primary MPS server; it uses the environment variables set by the module to locate the printers by default |
+| `SecondaryMPSPrinterDirectory` | [byDir] The directory containing the printers from the secondary MPS server; it uses the environment variables set by the module to locate the printers by default |
+| `PrimaryList` | [byList] The list of printers from the primary MPS server |
+| `SecondaryList` | [byList] The list of printers from the secondary MPS server |
 
 ##### _Example_
 
@@ -685,8 +685,8 @@ This function uses dmdestsync.exe to either push a printer from the primary MPS 
 
 | Parameter Name | Description |
 | :-- | :-- |
-| `-PrinterName` | The specific printer(s) to pull/push; if it is set to 'All', it will sync all of the printers. With _All_ printers, it is a slow process.  |
-| `-ShowProgress` | This will display a progress bar showing the printers as they are synchronized. |
+| `PrinterName` | The specific printer(s) to pull/push; if it is set to 'All', it will sync all of the printers. With _All_ printers, it is a slow process.  |
+| `ShowProgress` | This will display a progress bar showing the printers as they are synchronized. |
 
 ##### _Example_
 
@@ -709,9 +709,9 @@ This is a generic function to test the reponsiveness of a remote machine on a sp
 
 | Parameter Name | Description |
 | :-- | :-- |
-| `-ComputerName` | The resolvable name or ip address to test |
-| `-TCPPort` | The TCP port to test; it is defaulted to TCP/9100; other typical ports to test are 515 for LPR/LPD, 80/443 for web pages etc.|
-| `-TimeOutinMilliseconds` | The timeout that the script will wait for, before giving up and returning `$false`.  It is defaulted to 3000 (3 seconds). |
+| `ComputerName` | The resolvable name or ip address to test |
+| `TCPPort` | The TCP port to test; it is defaulted to TCP/9100; other typical ports to test are 515 for LPR/LPD, 80/443 for web pages etc.|
+| `TimeOutinMilliseconds` | The timeout that the script will wait for, before giving up and returning `$false`.  It is defaulted to 3000 (3 seconds). |
 
 ##### _Example_
 
