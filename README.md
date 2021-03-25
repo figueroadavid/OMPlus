@@ -462,47 +462,14 @@ This creates a sample csv file that is appropriate to import into `New-OMBulkImp
 | `IncludeComments` | This adds a series of comments for the optional _Parameters_ giving explanations to those _Parameters_ |
 | `OptionalParameter` | A list of the available optional_Parameters_ to include in the output file; |
 
-<table>
-    <tr>
-        <th colspan=4>Options</th>
-    </tr>
-    <tr>
-        <td><font face="Courier New">HasInternalWebServer</font></td>
-        <td><font face="Courier New"Comment</font></td>
-        <td><font face="Courier New"PCAPpath</font></td>
-        <td><font face="Courier New"FileBreak</font></td>
-    </tr>
-    <tr>
-        <td><font face="Courier New"CustomURL</font></td>
-        <td><font face="Courier New"Notes</font></td>
-        <td><font face="Courier New"CPSMetering</font></td>
-        <td><font face="Courier New"Banner</font></td>
-    </tr>
-    <tr>
-        <td><font face="Courier New"ForceWebServer</font></td>
-        <td><font face="Courier New"SupportNotes</font></td>
-        <td><font face="Courier New"InsertMissingFF</font></td>
-        <td><font face="Courier New"WriteTimeout</font></td>
-    </tr>
-    <tr>
-        <td><font face="Courier New"DriverType</font></td>
-        <td><font face="Courier New"UserFilterPath</font></td>
-        <td><font face="Courier New"FormType</font></td>
-        <td><font face="Courier New"TranslationTable</font></td>
-    </tr>
-    <tr>
-        <td><font face="Courier New"DoNotValidate</font></td>
-        <td><font face="Courier New"Filter2</font></td>
-        <td><font face="Courier New"LFtoCRLF</font></td>
-        <td><font face="Courier New"PageLimit</font></td>
-    </tr>
-    <tr>
-        <td><font face="Courier New"PurgeTime</font></td>
-        <td><font face="Courier New"Filter3</font></td>
-        <td><font face="Courier New"CopyBreak</font></td>
-        <td><font face="Courier New"IsTesting</font></td>
-    </tr>
-</table>
+|                        |                  |                   |                    |
+| :------                | ----             | ----              | ----               |
+| `HasInternalWebServer` | `Comment`        | `PCAPpath`        | `FileBreak`        |
+| `CustomURL`            | `Notes`          | `CPSMetering`     | `Banner`           |
+| `ForceWebServer`       | `SupportNotes`   | `InsertMissingFF` | `WriteTimeout`     |
+| `DriverType`           | `UserFilterPath` | `FormType`        | `TranslationTable` |
+| `DoNotValidate`        | `Filter2`        | `LFtoCRLF`        | `PageLimit`        |
+| `PurgeTime`            | `Filter3`        | `CopyBreak`       | `IsTesting`        |
 
 ##### _Example_
 
