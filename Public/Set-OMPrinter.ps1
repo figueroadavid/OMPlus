@@ -1,4 +1,4 @@
-if ($IsOMPLusPrimaryMPS) {
+if ($Global:IsOMPLusPrimaryMPS) {
     function Set-OMPrinter {
         <#
         .SYNOPSIS
@@ -251,7 +251,7 @@ if ($IsOMPLusPrimaryMPS) {
                 Write-Verbose -Message $Message
             }
             else {
-                $Message = 'DriverType "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $DriverType, $CRLF,($ValidTypes -join $CRLF)
+                $Message = 'DriverType "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $DriverType, $CRLF,($Global:ValidTypes -join $CRLF)
                 throw $Message
             }
 

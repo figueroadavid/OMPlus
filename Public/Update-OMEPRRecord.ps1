@@ -1,4 +1,6 @@
-Function Update-OMEPRRecord {
+if ($PSVersionTable.PSVersion.Major -lt 5)
+{
+    Function Update-OMEPRRecord {
     [cmdletbinding(SupportsShouldProcess)]
     param(
         [parameter(Mandatory, ValueFromPipelineByPropertyName)]
@@ -22,7 +24,7 @@ Function Update-OMEPRRecord {
                     )
                 }
         })]
-        [string]$OMPlusQueueName,
+        [string]$Global:OMQueueName,
 
         [parameter(ValueFromPipelineByPropertyName)]
         [ArgumentCompleter({
@@ -84,7 +86,7 @@ Function Update-OMEPRRecord {
         [string]$MediaType
     )
 
-        $EPSPath    = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
+        $EPSPath    = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
         $TopSection = [System.Text.StringBuilder]::new()
         $Delimiter  = '|'
         $Stream = [System.IO.StreamReader]::new($EPSPath)
@@ -100,7 +102,7 @@ Function Update-OMEPRRecord {
                 foreach ($Param in $PSBoundParameters) {
                     switch ($Param) {
                         'OMPlusQueueName' {
-                            $MyRecord['OMPlusQueueName'] = $OMPlusQueueName
+                            $MyRecord['OMPlusQueueName'] = $Global:OMQueueName
                         }
                         'DriverName' {
                             $DriverNames = Get-OMDriverNames | Select-Object -ExpandProperty Driver
@@ -114,7 +116,7 @@ Function Update-OMEPRRecord {
                         }
                         'TrayName' {
                             $TrayLookup = Get-OMTypeTable -
-                            $MyRecord['TrayName'] =
+                            $MyRecord['TrayName'] = Get-OMDriverNames | Select-Object -ExpandProperty TrayRef
                         }
                         'DuplexOption' {
 
@@ -150,4 +152,5 @@ Function Update-OMEPRRecord {
 
         Update-OMTransformServer
 
+    }
 }

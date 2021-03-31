@@ -506,7 +506,8 @@ ___
 
 ### `Remove-OMDuplicateEPR`
 
-This function scans the eps_map file and removes duplicate entries based on the EPR Queue name
+This function scans the eps_map file and removes duplicate entries based on the EPR Queue name.
+The function also makes a backup copy of the eps_map file for safety.
 
 ##### _Parameters_
 

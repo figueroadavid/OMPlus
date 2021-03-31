@@ -10,8 +10,8 @@ function Sync-OMSecondaryPrinter {
 
     begin {
         $ProcessStartInfo                           = [System.Diagnostics.ProcessStartInfo]::new()
-        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMPlusBinPath, 'dmdestsync.exe')
-        $ProcessStartInfo.WorkingDirectory          = $OMPlusSystemPath
+        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($Global:OMBinPath, 'dmdestsync.exe')
+        $ProcessStartInfo.WorkingDirectory          = $Global:OMSystemPath
         $ProcessStartInfo.CreateNoWindow            = $true
         $ProcessStartInfo.RedirectStandardError     = $true
         $ProcessStartInfo.RedirectStandardOutput    = $true
@@ -25,7 +25,7 @@ function Sync-OMSecondaryPrinter {
 
     process {
         if ($PrinterName -contains 'All') {
-            if ($IsOMPLusPrimaryMPS) {
+            if ($Global:IsOMPLusPrimaryMPS) {
                 $ProcessStartInfo.Arguments     = '-d all'
             }
             else {
@@ -45,7 +45,7 @@ function Sync-OMSecondaryPrinter {
                     CurrentOperation    = 'Start'
                     Status              = 'Starting'
                 }
-                if ($IsOMPLusPrimaryMPS) {
+                if ($Global:IsOMPLusPrimaryMPS) {
                     $ProgressSplat['Activity'] = 'Pushing printers from primary MPS to secondary MPS'
                 }
                 else {
@@ -61,7 +61,7 @@ function Sync-OMSecondaryPrinter {
                         CurrentOperation    = $Printer
                         Status              = '{0} of {1}' -f $CurrentCount, $PrinterName.Count
                     }
-                    if ($IsOMPLusPrimaryMPS) {
+                    if ($Global:IsOMPLusPrimaryMPS) {
                         $ProgressSplat['Activity'] = 'Pushing printers from primary MPS to secondary MPS'
                     }
                     else {
@@ -70,7 +70,7 @@ function Sync-OMSecondaryPrinter {
                     Write-Progress @ProgressSplat
                 }
 
-                if ($IsOMPLusPrimaryMPS) {
+                if ($Global:IsOMPLusPrimaryMPS) {
                     $ProcessStartInfo.Arguments = '-d {0}' -f $Printer
                 }
                 else {

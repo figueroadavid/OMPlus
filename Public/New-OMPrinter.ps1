@@ -239,7 +239,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-ChildItem -Path $OMPlusFormsPath | Select-Object -ExpandProperty BaseName |
+                    Get-ChildItem -Path $Global:OMFormsPath | Select-Object -ExpandProperty BaseName |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -311,7 +311,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($Global:ValidTypes -join $CRLF)
                     throw $Message
                 }
             }
@@ -437,7 +437,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $OMPlusBinPath, 'lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $Global:OMBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }
@@ -449,7 +449,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     WindowStyle     = 'Hidden'
                 }
                 Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
-                if ($IsOMPLusPrimaryMPS -eq $false) {
+                if ($Global:IsOMPLusPrimaryMPS -eq $false) {
                     $Message = 'Be aware that this is a secondary Master Print Server, and WILL BE OVERWRITTEN by the primary'
                     Write-Warning -Message $Message
                 }
@@ -719,7 +719,7 @@ else {
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($Global:ValidTypes -join $CRLF)
                     throw $Message
                 }
             }
@@ -844,7 +844,7 @@ else {
         }
 
         end {
-            $LPAdmin = [system.io.path]::combine( $OMPlusBinPath, 'lpadmin.exe' )
+            $LPAdmin = [system.io.path]::combine( $Global:OMBinPath, 'lpadmin.exe' )
             if ($IsTesting -or $IsFullTesting) {
                 '{0} {1}' -f $LPAdmin, ($ArgString -join ' ')
             }
@@ -856,7 +856,7 @@ else {
                     WindowStyle     = 'Hidden'
                 }
                 Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
-                if ($IsOMPLusPrimaryMPS -eq $false) {
+                if ($Global:IsOMPLusPrimaryMPS -eq $false) {
                     $Message = 'Be aware that this is a secondary Master Print Server, and WILL BE OVERWRITTEN by the primary'
                     Write-Warning -Message $Message
                 }

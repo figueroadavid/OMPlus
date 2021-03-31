@@ -110,7 +110,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         }
 
         foreach ($Printer in $PrinterName) {
-            $ConfigPath = [System.IO.Path]::Combine($OMPlusPrinterPath, $Printer, 'configuration')
+            $ConfigPath = [System.IO.Path]::Combine($Global:OMPrinterPath, $Printer, 'configuration')
             Try {
                 $Config = Get-Content -Path $ConfigPath -ErrorAction Stop
             }
@@ -231,7 +231,7 @@ else {
         }
 
         foreach ($Printer in $PrinterName) {
-            $ConfigPath = [System.IO.Path]::Combine($OMPlusPrinterPath, $Printer, 'configuration')
+            $ConfigPath = [System.IO.Path]::Combine($Global:OMPrinterPath, $Printer, 'configuration')
             Try {
                 $Config = Get-Content -Path $ConfigPath -ErrorAction Stop
             }

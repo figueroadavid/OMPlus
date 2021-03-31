@@ -25,10 +25,10 @@ Function Remove-OMEPRRecord {
 
     begin {
         Read-Host -Prompt 'Function in Development, NOT for production use'
-        $EPSPath    = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
-        $BackupPath = [system.io.path]::Combine($OMPlusSystemPath, ('eps_map_{0}.bkp' -f [datetime]::Now.ToString('yyyyMMdd_hhmmss')))
+        $EPSPath    = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
+        $BackupPath = [system.io.path]::Combine($Global:OMSystemPath, ('eps_map_{0}.bkp' -f [datetime]::Now.ToString('yyyyMMdd_hhmmss')))
 
-        $BackupFiles = Get-ChildItem -path $OMPlusSystemPath -Filter "eps_map*.bkp"
+        $BackupFiles = Get-ChildItem -path $Global:OMSystemPath -Filter "eps_map*.bkp"
         $BackupCount = $BackupFiles.Count
         if ($BackupCount -ge 10 ) {
             $Message = 'There are {0} eps_map backup copies, deleting the oldest backups until the count is 10' -f $BackupCount.ToString()

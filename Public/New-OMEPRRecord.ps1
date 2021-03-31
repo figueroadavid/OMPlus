@@ -1,4 +1,4 @@
-if ($IsOMPLusPrimaryMPS) {
+if ($Global:IsOMPLusPrimaryMPS) {
     if ($PSVersionTable.PSVersion.Major -ge 5) {
         Function New-OMEPRRecord {
             <#
@@ -86,7 +86,7 @@ if ($IsOMPLusPrimaryMPS) {
                 [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$OMPlusQueue,
+                [string]$Global:OMQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
@@ -182,7 +182,7 @@ if ($IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
                 }
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
                 $PaperSizeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes
@@ -193,7 +193,7 @@ if ($IsOMPLusPrimaryMPS) {
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
                 $thisRecord.Add($EPRQueue)
-                $thisRecord.Add($OMPlusQueue)
+                $thisRecord.Add($Global:OMQueue)
                 $thisRecord.Add($DriverName)
 
 
@@ -389,7 +389,7 @@ if ($IsOMPLusPrimaryMPS) {
                 [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$OMPlusQueue,
+                [string]$Global:OMQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [string]$DriverName,
@@ -417,7 +417,7 @@ if ($IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($OMPlusSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
                 }
 
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
@@ -430,7 +430,7 @@ if ($IsOMPLusPrimaryMPS) {
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
                 $thisRecord.Add($EPRQueue)
-                $thisRecord.Add($OMPlusQueue)
+                $thisRecord.Add($Global:OMQueue)
                 $thisRecord.Add($DriverName)
 
 
