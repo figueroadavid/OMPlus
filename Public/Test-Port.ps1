@@ -20,25 +20,25 @@ function Test-Port
     {
         $TCPClient.Close()
         Write-Verbose -Message ('Connection Timeout to {0} on port {1}' -f $ComputerName, $TCPPort)
-        $Global:ValidConnection = $false
+        $ValidConnection = $false
     }
     else
     {
         $Error.Clear()
         try {
             $null = $TCPClient.EndConnect($Connection)
-            $Global:ValidConnection = $true
+            $ValidConnection = $true
         }
         catch {
             Write-Verbose -Message ('Error detected:{0}' -f $Error[0])
-            $Global:ValidConnection = $false
+            $ValidConnection = $false
         }
 
         $TCPClient.Close()
     }
     if ($VerbosePreference -eq 'Continue')
     {
-        if ($Global:ValidConnection)
+        if ($ValidConnection)
         {
             Write-Verbose -Message ('TCP Port {0} is open on {1}' -f $TCPPort, $ComputerName)
         }
@@ -50,6 +50,6 @@ function Test-Port
     }
     else
     {
-        Write-Output $Global:ValidConnection
+        Write-Output $ValidConnection
     }
 }

@@ -30,7 +30,7 @@ function Remove-OMDuplicateEPR {
     begin {
         $EPRHeader = 'Server','EPR','Queue','Driver','Tray','Dpx','PaperSize','RX'
         $EPRList = New-Object -TypeName 'System.Collections.Generic.List[string]'
-        $EPSMap = [system.io.path]::Combine($Global:OMSystemPath , 'eps_map')
+        $EPSMap = [system.io.path]::Combine($OMSystemPath , 'eps_map')
 
         $StreamReader = New-Object -TypeName System.IO.StreamReader -ArgumentList $EPSMap
         $TempOutput = New-TemporaryFile
@@ -91,9 +91,9 @@ function Remove-OMDuplicateEPR {
 
         if ($PSCmdlet.ShouldProcess('Creating backup and overwriting eps_map', '', '')) {
             if ($DuplicateTracker.Count -gt 0) {
-                $BackupPath = [system.io.path]::Combine($Global:OMSystemPath, ('eps_map_{0}.bkp' -f [datetime]::Now.ToString('yyyyMMdd_hhmmss')))
+                $BackupPath = [system.io.path]::Combine($OMSystemPath, ('eps_map_{0}.bkp' -f [datetime]::Now.ToString('yyyyMMdd_hhmmss')))
 
-                $BackupFiles = Get-ChildItem -path $Global:OMSystemPath -Filter "eps_map*.bkp"
+                $BackupFiles = Get-ChildItem -path $OMSystemPath -Filter "eps_map*.bkp"
                 $BackupCount = $BackupFiles.Count
                 if ($BackupCount -ge 10 ) {
                     $Message = 'There are {0} eps_map backup copies, deleting the oldest backups until the count is 10' -f $BackupCount.ToString()

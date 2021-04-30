@@ -28,7 +28,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [string]$SortBy = 'Type'
         )
 
-        $TypesFile = [system.io.path]::Combine($Global:OMSystemPath, 'types.conf')
+        $TypesFile = [system.io.path]::Combine($OMSystemPath, 'types.conf')
         $XML = New-Object -TypeName XML
         $XML.Load($TypesFile)
 
@@ -79,14 +79,14 @@ else {
             [string]$SortBy = 'Type'
         )
 
-        if ($DriverType -in $Global:ValidTypes) {
+        if ($DriverType -in $ValidTypes) {
             Write-Verbose -Message 'Valid type, continuing'
         }
         else {
             throw ('DriverType ({0}) does not appear to be a valid driver type' -f $DriverType)
         }
 
-        $TypesFile = [system.io.path]::Combine($Global:OMSystemPath, 'types.conf')
+        $TypesFile = [system.io.path]::Combine($OMSystemPath, 'types.conf')
         $XML = New-Object -TypeName XML
         $XML.Load($TypesFile)
 

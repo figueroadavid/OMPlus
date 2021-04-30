@@ -1,4 +1,4 @@
-if ($Global:IsOMPrimaryMPS) {
+if ($IsOMPrimaryMPS) {
     Function Get-OMDriverNames {
         <#
         .SYNOPSIS
@@ -32,7 +32,7 @@ if ($Global:IsOMPrimaryMPS) {
         [CmdletBinding()]
         param()
 
-        $CSVPath = [system.io.path]::combine($Global:OMHOMEPath, 'system','OM_EPS_WIN_Queues.csv')
+        $CSVPath = [system.io.path]::combine($OMSystemPath, 'OM_EPS_WIN_Queues.csv')
 
         if (Test-Path -Path $CSVPath) {
             $QueueTypes = Import-Csv -Path $CSVPath -Header DriverName,DisplayName

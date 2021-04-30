@@ -112,9 +112,9 @@ Function Remove-OMPrintJob {
     )
 
     begin {
-        $dccResetPath   = [system.io.path]::Combine($Global:BinPath, 'dccreset.exe')
-        $dccCancelPath  = [system.io.path]::Combine($Global:BinPath, 'dcccancel.exe')
-        $dccGrpPath     = [system.io.path]::Combine($Global:BinPath, 'dccgrp.exe')
+        $dccResetPath   = [system.io.path]::Combine($BinPath, 'dccreset.exe')
+        $dccCancelPath  = [system.io.path]::Combine($BinPath, 'dcccancel.exe')
+        $dccGrpPath     = [system.io.path]::Combine($BinPath, 'dccgrp.exe')
     }
 
     process {

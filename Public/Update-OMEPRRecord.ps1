@@ -1,4 +1,4 @@
-if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
+if ($PSVersionTable.PSVersion.Major -ge 5 -and $IsOMPrimaryMPS) {
     Function Update-OMEPRRecord {
     [cmdletbinding(SupportsShouldProcess)]
     param(
@@ -23,7 +23,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
                     )
                 }
         })]
-        [string]$Global:OMQueueName,
+        [string]$OMQueueName,
 
         [parameter(ValueFromPipelineByPropertyName)]
         [ArgumentCompleter({
@@ -102,7 +102,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
         [string]$MediaType
     )
 
-        $EPSPath    = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
+        $EPSPath    = [system.io.path]::Combine($OMSystemPath, 'eps_map')
         $TopSection = [System.Text.StringBuilder]::new()
         $Delimiter  = '|'
         $Stream     = [System.IO.StreamReader]::new($EPSPath)
@@ -119,10 +119,10 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
                 foreach ($Param in $PSBoundParameters) {
                     switch ($Param) {
                         'OMPlusQueueName' {
-                            $MyRecord['OMPlusQueueName'] = $Global:OMQueueName
+                            $MyRecord['OMPlusQueueName'] = $OMQueueName
                         }
                         'DriverName' {
-                            if ($Global:ValidTypes -contains $DriverName) {
+                            if ($ValidTypes -contains $DriverName) {
                                 $MyRecord['DriverName'] = $DriverName
                             }
                             else {
@@ -132,7 +132,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
                         }
                         'TrayName' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisDriver = $DriverName
@@ -167,7 +167,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
 
                         'PaperSize' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message        = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisPaperSize  = $PaperSize
@@ -197,7 +197,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
                         }
                         'MediaType' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message        = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisMedia      = $MediaType
@@ -248,7 +248,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $Global:IsOMPrimaryMPS) {
         }
     }
 }
-elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
+elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $IsOMPrimaryMPS) {
 
         Function Update-OMEPRRecord {
         [cmdletbinding(SupportsShouldProcess)]
@@ -283,7 +283,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
             [string]$MediaType
         )
 
-        $EPSPath    = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
+        $EPSPath    = [system.io.path]::Combine($OMSystemPath, 'eps_map')
         $TopSection = [System.Text.StringBuilder]::new()
         $Delimiter  = '|'
         $Stream     = [System.IO.StreamReader]::new($EPSPath)
@@ -300,10 +300,10 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
                 foreach ($Param in $PSBoundParameters) {
                     switch ($Param) {
                         'OMPlusQueueName' {
-                            $MyRecord['OMPlusQueueName'] = $Global:OMQueueName
+                            $MyRecord['OMPlusQueueName'] = $OMQueueName
                         }
                         'DriverName' {
-                            if ($Global:ValidTypes -contains $DriverName) {
+                            if ($ValidTypes -contains $DriverName) {
                                 $MyRecord['DriverName'] = $DriverName
                             }
                             else {
@@ -313,7 +313,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
                         }
                         'TrayName' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisDriver = $DriverName
@@ -348,7 +348,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
 
                         'PaperSize' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message        = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisPaperSize  = $PaperSize
@@ -378,7 +378,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $Global:IsOMPrimaryMPS) {
                         }
                         'MediaType' {
                             if ($DriverName) {
-                                if ($Global:ValidTypes -contains $DriverName) {
+                                if ($ValidTypes -contains $DriverName) {
                                     $Message        = 'New Driver type ({0}) is valid' -f $DriverName
                                     Write-Verbose -Message $Message
                                     $thisMedia      = $MediaType

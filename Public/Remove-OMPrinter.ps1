@@ -22,8 +22,7 @@ function  Remove-OMPrinter {
     )
 
     Begin {
-        $BinPath = [System.IO.Path]::Combine($Global:OMHOMEPATH, 'bin')
-        $ExePath = [system.io.path]::Combine($BinPath, 'lpadmin.exe')
+        $ExePath = [system.io.path]::Combine($OMBinPath, 'lpadmin.exe')
     }
 
     Process {

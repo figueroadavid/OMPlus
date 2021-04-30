@@ -1,4 +1,4 @@
-if ($Global:IsOMPLusPrimaryMPS) {
+if ($IsOMPrimaryMPS) {
     if ($PSVersionTable.PSVersion.Major -ge 5) {
         Function New-OMEPRRecord {
             <#
@@ -10,7 +10,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 PS C:\> $EPRSplat = @{
                     ServerName      = 'server01.domain.local'
                     EPRQueue        = 'PRINTER01'
-                    OMPlusQueue     = 'PRINTER01'
+                    OMQueue         = 'PRINTER01'
                     DriverName      = 'DellOPDPCL5'
                     TrayName        = 'Tray 1'
                     DuplexOption    = 'Horizontal'
@@ -23,12 +23,13 @@ if ($Global:IsOMPLusPrimaryMPS) {
 
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
-                generated EPR record.
+                generated EPR record.  This parameter is hidden, since it will almost always 
+                be used on the primary MPS server.
 
             .PARAMETER EPRQueue
                 The name of the EPR Queue in OMPlus
 
-            .PARAMETER OMPlusQueue
+            .PARAMETER OMQueue
                 The name of the OMPlus Queue name (this is the destination queue name).
 
             .PARAMETER DriverName
@@ -86,7 +87,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$Global:OMQueue,
+                [string]$OMQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [ArgumentCompleter({
@@ -164,7 +165,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 })]
                 [string]$MediaType = 'None',
 
-                [parameter(ValueFromPipelineByPropertyName)]
+                [parameter(ValueFromPipelineByPropertyName, DontShow)]
                 [ValidateScript({
                     if ($_ -match '^(\w+\.){1,}\w+\.\w+$') {
                         Write-Verbose -Message ('{0} appears to be a valid FQDN' -f $_)
@@ -182,7 +183,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($OMSystemPath, 'eps_map')
                 }
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
                 $PaperSizeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes
@@ -193,7 +194,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
                 $thisRecord.Add($EPRQueue)
-                $thisRecord.Add($Global:OMQueue)
+                $thisRecord.Add($OMQueue)
                 $thisRecord.Add($DriverName)
 
 
@@ -318,7 +319,8 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 PS C:\> New-OMEPRRecord
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
-                generated EPR record.
+                generated EPR record. This parameter is hidden, since it will almost always 
+                be used on the primary MPS server.
 
             .PARAMETER EPRQueue
                 The name of the EPR Queue in OMPlus
@@ -373,7 +375,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
             #>
             [cmdletbinding(SupportsShouldProcess)]
             param(
-                [parameter(ValueFromPipelineByPropertyName)]
+                [parameter(ValueFromPipelineByPropertyName, DontShow)]
                 [ValidateScript({
                     if ($_ -match '^(\w+\.){1,}\w+\.\w+$') {
                         Write-Verbose -Message ('{0} appears to be a valid FQDN' -f $_)
@@ -389,7 +391,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 [string]$EPRQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
-                [string]$Global:OMQueue,
+                [string]$OMQueue,
 
                 [parameter(Mandatory, ValueFromPipelineByPropertyName)]
                 [string]$DriverName,
@@ -417,7 +419,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($Global:OMSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($OMSystemPath, 'eps_map')
                 }
 
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
@@ -430,7 +432,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 $thisRecord = New-Object -TypeName System.Collections.Generic.List[string]
                 $thisRecord.Add($ServerName)
                 $thisRecord.Add($EPRQueue)
-                $thisRecord.Add($Global:OMQueue)
+                $thisRecord.Add($OMQueue)
                 $thisRecord.Add($DriverName)
 
 
@@ -440,7 +442,7 @@ if ($Global:IsOMPLusPrimaryMPS) {
                 else {
                     $thisMatch = $TrayDictionary | Where-Object { $_.TrayRef -match ('^{0}$' -f [RegEx]::Escape($TrayName) ) } |
                         Measure-Object | Select-Object -Property Count
-                    switch ($thisMatch.Count) {
+                        switch ($thisMatch.Count) {
                         0 {
                             $thisRecord.Add('DELETEME')
                             $Message = 'No tray names match {0}, putting in an empty field' -f $TrayName

@@ -34,7 +34,7 @@ Function Disable-OMPPrinter {
             $PrinterNameCount = $PrinterName.Count
             $CurrentCount = 0
         }
-        $DCCdisable = [system.io.path]::combine( $global:omhomepath, 'bin','dccenable.exe' )
+        $DCCdisable = [system.io.path]::combine( $env:omhomepath, 'bin','dccenable.exe' )
     }
 
     process {
