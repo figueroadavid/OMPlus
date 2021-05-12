@@ -47,6 +47,7 @@ Here are the base functions provided
     </tr>
 </table>
 
+## [Bugs :arrow_down:](##Bugs)
 
 ## Functions
 
@@ -784,3 +785,10 @@ PS C:\> Update-OMTransformServer
 ```
 
 [Jump to Top :arrow_up:](#)
+
+---
+## Known Bugs
+
+<a name="bugs"></a>
+
+1. Using the `set-printer` cmdlet without the IP address will break the destination configuration.
