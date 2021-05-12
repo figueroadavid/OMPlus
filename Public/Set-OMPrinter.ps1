@@ -19,7 +19,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                 Notes 					= 'Test Notes'
                 SupportNotes 			= 'Support Notes'
                 WriteTimeout 			= 60
-                Model 				    = 'HPUPD5'
+                Model 				    = 'omstandard.js'
                 Mode 					= 'termserv'
                 FormType 				= 'Letter'
                 PCAPPath 				= 'c:\temp\test.pcap'
@@ -35,7 +35,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             D:\Plustech\OMPlus\Server\\bin\lpadmin.exe -pTESTPRINTER -v10.0.4.112!9100 -omode="termserv" -opurgetime=45
             -ourl="http://10.0.4.112" -ometering=5000 -oPcap="c:\temp\test.pcap" -opagelimit=5 -onoteinfo="Test Notes" -z
             -owritetime=60 -ocmnt="Beaker" -obanner -oform="Letter" -olfc -onocopybreak -osupport="Support Notes"
-            -omode="termserv" -ofilesometimes -onofilebreak -oPTHPUPD5
+            -omode="termserv" -ofilesometimes -onofilebreak -oPTomstandard.js
 
             This example inputs many different parameters and outputs the intended command line (because we are using
             the IsTesting parameter)
@@ -98,8 +98,8 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         .PARAMETER TranslationTable
             Sets a different translation table for the print jobs
         .PARAMETER Model
-            Selects the correct type/model of driver for the printer.  The list of drivers can be obtained using the
-            Get-OMDriverNames function.
+            Selects the correct model for the printer.  The is a list of the standard script files used to create
+            the interface scripts for the printers.
         .PARAMETER Mode
             Selects the correct print mode for the printer. Most printers use the default value of 'termserv'
             The complete list is:
@@ -150,7 +150,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
             [string]$PrinterName,
 
-            [parameter(Mandatory, ValueFromPipelineByPropertyName)]
+            [parameter(ValueFromPipelineByPropertyName)]
             [ValidateScript({
                 if ($_ -is [ipaddress]) {
                     $true
@@ -179,7 +179,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             [parameter(ValueFromPipelineByPropertyName)]
             [ArgumentCompleter({
                 param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-                    Get-OMDriverNames | Select-object -ExpandProperty 'Driver' |
+                    Get-ChildItem -Path $OMModelPath | Select-object -ExpandProperty 'Name' |
                     Where-Object { $_ -like "$WordToComplete*"} |
                     Sort-Object |
                     Foreach-Object {
@@ -306,12 +306,12 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
             }
 
             if ($Model) {
-                if ($Model -in $ValidTypes) {
+                if ($Model -in $ValidModels) {
                     $Message = 'Model "{0}" is a valid type' -f $Model
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidModels -join $CRLF)
                     throw $Message
                 }
             }
@@ -479,7 +479,7 @@ else {
                 Notes 					= 'Test Notes'
                 SupportNotes 			= 'Support Notes'
                 WriteTimeout 			= 60
-                Model 				    = 'HPUPD5'
+                Model 				    = 'omstandard.js'
                 Mode 					= 'termserv'
                 FormType 				= 'Letter'
                 PCAPPath 				= 'c:\temp\test.pcap'
@@ -495,7 +495,7 @@ else {
             D:\Plustech\OMPlus\Server\\bin\lpadmin.exe -pTESTPRINTER -v10.0.4.112!9100 -omode="termserv" -opurgetime=45
             -ourl="http://10.0.4.112" -ometering=5000 -oPcap="c:\temp\test.pcap" -opagelimit=5 -onoteinfo="Test Notes" -z
             -owritetime=60 -ocmnt="Beaker" -obanner -oform="Letter" -olfc -onocopybreak -osupport="Support Notes"
-            -omode="termserv" -ofilesometimes -onofilebreak -oPTHPUPD5
+            -omode="termserv" -ofilesometimes -onofilebreak -oPTomstandard.js
 
             This example inputs many different parameters and outputs the intended command line (because we are using
             the IsTesting parameter)
@@ -558,9 +558,8 @@ else {
         .PARAMETER TranslationTable
             Sets a different translation table for the print jobs
         .PARAMETER Model
-            Selects the correct type of driver for the printer.  The list of drivers can be obtained using the
-            Get-OMDriverNames function.  This script was written for Powershell 4.  Future versions will
-            use ArgumentCompleters to pre-supply the available driver names.
+            Selects the correct model for the printer.  The is a list of the standard script files used to create
+            the interface scripts for the printers.
         .PARAMETER Mode
             Selects the correct print mode for the printer. Most printers use the default value of 'termserv'
             The complete list is:
@@ -608,7 +607,7 @@ else {
             [parameter(Mandatory, ValueFromPipelineByPropertyName)]
             [string]$PrinterName,
 
-            [parameter(Mandatory, ValueFromPipelineByPropertyName)]
+            [parameter(ValueFromPipelineByPropertyName)]
             [IPAddress]$IPAddress,
 
             [parameter(ValueFromPipelineByPropertyName)]
@@ -649,7 +648,7 @@ else {
             [string]$TranslationTable,
 
             [parameter(ValueFromPipelineByPropertyName)]
-            [ValidateSet('DellOPDPCL5','HPUPD5','HPUPD6','LexUPDv2','LexUPDv2PS3','LexUPDv2XL','RICOHPCL6','XeroxUPDPCL6','XeroxUPDPS','ZDesignerAM400', 'Zebra2.5x4', 'ZebSmallPO')]
+            [ValidateSet('omstandard.js','banner','omagent.js','ombanner.js','omcpclretry.js','omepic.js','omstandard.bat','psbanner','pt_transf.js','throwaway.bat')]
             [string]$Model,
 
             [parameter(ValueFromPipelineByPropertyName)]
@@ -714,12 +713,12 @@ else {
 
 
             if ($Model) {
-                if ($Model -in $ValidTypes) {
+                if ($Model -in $ValidModels) {
                     $Message = 'Model "{0}" is a valid type' -f $Model
                     Write-Verbose -Message $Message
                 }
                 else {
-                    $Message = 'Model "{0}" is not a valid type.{1}ValidTypes are:{2}' -f $Model, $CRLF,($ValidTypes -join $CRLF)
+                    $Message = 'Model "{0}" is not a valid type.{1}ValidModels are:{2}' -f $Model, $CRLF,($ValidModels -join $CRLF)
                     throw $Message
                 }
             }

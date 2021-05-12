@@ -4,6 +4,7 @@ $OMPrinterPath   = [System.IO.Path]::Combine($env:OMHOME, 'printers')
 $OMBinPath       = [System.IO.Path]::Combine($env:OMHOME, 'bin')
 $OMFormsPath     = [System.IO.Path]::Combine($env:OMHOME, 'forms')
 $OMSystemPath    = [System.IO.Path]::Combine($env:OMHOME, 'system')
+$OMModelPath     = [System.IO.Path]::Combine($env:OMHOME, 'model')
 
 Write-Verbose -Message 'Setting parameters for OMPrimaryMPS, OMSecondaryMPS'
 $pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $OMSystemPath, 'pingMaster'))
@@ -37,5 +38,6 @@ Get-ChildItem -Path $PSScriptRoot\Public -File -Filter *.ps1 | Where-Object full
 if ($IsOMPrimaryMPS) {
     $ValidTypes      = Get-OMDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 }
+$ValidModels = Get-ChildItem -Path $OMModelPath | Select-Object -ExpandProperty Name 
 
 $CRLF                = [Environment]::NewLine
