@@ -32,7 +32,7 @@ if ($IsOMPrimaryMPS) {
         [CmdletBinding()]
         param()
 
-        $CSVPath = [system.io.path]::combine($OMSystemPath, 'OM_EPS_WIN_Queues.csv')
+        $CSVPath = [system.io.path]::combine($OMVariables.System, 'OM_EPS_WIN_Queues.csv')
 
         if (Test-Path -Path $CSVPath) {
             $QueueTypes = Import-Csv -Path $CSVPath -Header DriverName,DisplayName

@@ -23,7 +23,7 @@ if ($IsOMPrimaryMPS) {
 
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
-                generated EPR record.  This parameter is hidden, since it will almost always 
+                generated EPR record.  This parameter is hidden, since it will almost always
                 be used on the primary MPS server.
 
             .PARAMETER EPRQueue
@@ -183,7 +183,7 @@ if ($IsOMPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($OMSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($OMVariables.System, 'eps_map')
                 }
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays
                 $PaperSizeDictionary    = Get-OMTypeTable -DriverType $DriverName -DisplayType PaperSizes
@@ -319,7 +319,7 @@ if ($IsOMPrimaryMPS) {
                 PS C:\> New-OMEPRRecord
             .PARAMETER ServerName
                 This is the fully qualified domain name of the server which will have the
-                generated EPR record. This parameter is hidden, since it will almost always 
+                generated EPR record. This parameter is hidden, since it will almost always
                 be used on the primary MPS server.
 
             .PARAMETER EPRQueue
@@ -419,7 +419,7 @@ if ($IsOMPrimaryMPS) {
 
             begin {
                 if ($Append) {
-                    $EPSMapPath = [system.io.path]::Combine($OMSystemPath, 'eps_map')
+                    $EPSMapPath = [system.io.path]::Combine($OMVariables.System, 'eps_map')
                 }
 
                 $TrayDictionary         = Get-OMTypeTable -DriverType $DriverName -DisplayType Trays

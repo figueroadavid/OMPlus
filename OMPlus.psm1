@@ -1,25 +1,29 @@
 #Requires -RunAsAdministrator
 
-$Script:OMPrinterPath   = [System.IO.Path]::Combine($env:OMHOME, 'printers')
-$Script:OMBinPath       = [System.IO.Path]::Combine($env:OMHOME, 'bin')
-$Script:OMFormsPath     = [System.IO.Path]::Combine($env:OMHOME, 'forms')
-$Script:OMSystemPath    = [System.IO.Path]::Combine($env:OMHOME, 'system')
-$Script:OMModelPath     = [System.IO.Path]::Combine($env:OMHOME, 'model')
+$Script:OMVariables = @{
+    HOME            = $env:OMHOME
+    Printer         = [System.IO.Path]::Combine($env:OMHOME, 'printers')
+    Bin             = [System.IO.Path]::Combine($env:OMHOME, 'bin')
+    Forms           = [System.IO.Path]::Combine($env:OMHOME, 'forms')
+    System          = [System.IO.Path]::Combine($env:OMHOME, 'system')
+    Model           = [System.IO.Path]::Combine($env:OMHOME, 'model')
+}
+
 
 Write-Verbose -Message 'Setting parameters for OMPrimaryMPS, OMSecondaryMPS'
-$pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $OMSystemPath, 'pingMaster'))
+$pingMaster = Get-Content -Path ([System.IO.Path]::Combine( $OMVariables.System, 'pingMaster'))
 if ($pingMaster -eq 'none') {
-    $Script:OMPrimaryMPS   = [system.net.dns]::GetHostByName($env:computername).hostname
+    $OMVariables.PrimaryMPS   = [system.net.dns]::GetHostByName($env:computername).hostname
     $Script:IsOMPrimaryMPS = $true
 
-    $pingParmPath   = [system.io.path]::combine($OMSystemPath, 'pingParms')
-    $Script:OMSecondaryMPS = (Get-Content -Path $pingParmPath |
+    $pingParmPath   = [system.io.path]::combine($OMVariables.System, 'pingParms')
+    $OMVariables.SecondaryMPS = (Get-Content -Path $pingParmPath |
         Where-Object { $_ -match '^Backup'}).Split('=')[1]
 }
 else {
-    $Script:IsOMPrimaryMPS = $false
-    $Script:OMPrimaryMPS   = $pingMaster
-    $Script:OMSecondaryMPS = [System.Net.Dns]::GetHostByName($env:computername).hostname
+    $Script:IsOMPrimaryMPS      = $false
+    $OMVariables.PrimaryMPS     = $pingMaster
+    $OMVariables.SecondaryMPS   = [System.Net.Dns]::GetHostByName($env:computername).hostname
 }
 
 Remove-Variable -Name pingMaster,pingParmPath -ErrorAction SilentlyContinue
@@ -40,6 +44,6 @@ if ($IsOMPrimaryMPS) {
     $script:ValidTypes      = Get-OMDriverNames | Select-Object -ExpandProperty Driver | Sort-Object
 }
 
-$script:ValidModels = Get-ChildItem -Path $OMModelPath | Select-Object -ExpandProperty Name
+$script:ValidModels = Get-ChildItem -Path $OMVariables.Model | Select-Object -ExpandProperty Name
 
 $CRLF                = [Environment]::NewLine

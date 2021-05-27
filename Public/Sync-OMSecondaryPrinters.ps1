@@ -10,8 +10,8 @@
 
     begin {
         $ProcessStartInfo                           = [System.Diagnostics.ProcessStartInfo]::new()
-        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMBinPath, 'dmdestsync.exe')
-        $ProcessStartInfo.WorkingDirectory          = $OMSystemPath
+        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMVariables.Bin, 'dmdestsync.exe')
+        $ProcessStartInfo.WorkingDirectory          = $OMVariables.System
         $ProcessStartInfo.CreateNoWindow            = $true
         $ProcessStartInfo.RedirectStandardError     = $true
         $ProcessStartInfo.RedirectStandardOutput    = $true

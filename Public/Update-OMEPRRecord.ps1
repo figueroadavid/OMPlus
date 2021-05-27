@@ -102,7 +102,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5 -and $IsOMPrimaryMPS) {
         [string]$MediaType
     )
 
-        $EPSPath    = [system.io.path]::Combine($OMSystemPath, 'eps_map')
+        $EPSPath    = [system.io.path]::Combine($OMVariables.System, 'eps_map')
         $TopSection = [System.Text.StringBuilder]::new()
         $Delimiter  = '|'
         $Stream     = [System.IO.StreamReader]::new($EPSPath)
@@ -283,7 +283,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $IsOMPrimaryMPS) {
             [string]$MediaType
         )
 
-        $EPSPath    = [system.io.path]::Combine($OMSystemPath, 'eps_map')
+        $EPSPath    = [system.io.path]::Combine($OMVariables.System, 'eps_map')
         $TopSection = [System.Text.StringBuilder]::new()
         $Delimiter  = '|'
         $Stream     = [System.IO.StreamReader]::new($EPSPath)

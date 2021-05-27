@@ -54,8 +54,8 @@ function Set-OMPrinterRedirection {
 
     if ($PSCmdlet.ShouldProcess('','',$PSCmdMessage)) {
         $ProcessStartInfo                           = [System.Diagnostics.ProcessStartInfo]::new()
-        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMBinPath, 'dccswitch.exe')
-        $ProcessStartInfo.WorkingDirectory          = $OMSystemPath
+        $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMVariables.Bin, 'dccswitch.exe')
+        $ProcessStartInfo.WorkingDirectory          = $OMVariables.System
         $ProcessStartInfo.CreateNoWindow            = $true
         $ProcessStartInfo.RedirectStandardError     = $true
         $ProcessStartInfo.RedirectStandardOutput    = $true
@@ -74,8 +74,8 @@ function Set-OMPrinterRedirection {
         $message = New-Object -TypeName System.Text.StringBuilder
         [void]$message.AppendLine('')
         [void]$message.AppendLine('Debugging information:')
-        [void]$message.AppendLine(('DCCSwitchPath = {0}' -f [system.io.path]::Combine($OMBinPath, 'dccswitch.exe')))
-        [void]$message.AppendLine(('OMSystemPath = {0}' -f $OMSystemPath))
+        [void]$message.AppendLine(('DCCSwitchPath = {0}' -f [system.io.path]::Combine($OMVariables.Bin, 'dccswitch.exe')))
+        [void]$message.AppendLine(('OMSystemPath = {0}' -f $OMVariables.System))
         [void]$message.AppendLine(('ParameterSetName = {0}' -f $PSCmdlet.ParameterSetName))
         [void]$message.AppendLine(('PrinterName = {0}' -f $PrinterName))
         switch ($PSCmdlet.ParameterSetName) {

@@ -36,9 +36,9 @@ Function Get-OMPrinterList {
     )
 
     if ($Filter) {
-        Get-ChildItem -Path $OMPrinterPath -Directory -Filter $Filter | Select-Object -ExpandProperty BaseName
+        Get-ChildItem -Path $OMVariables.Printer -Directory -Filter $Filter | Select-Object -ExpandProperty BaseName
     }
     else {
-        Get-ChildItem -Path $OMPrinterPath -Directory | Select-Object -ExpandProperty BaseName
+        Get-ChildItem -Path $OMVariables.Printer -Directory | Select-Object -ExpandProperty BaseName
     }
 }

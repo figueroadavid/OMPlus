@@ -12,20 +12,20 @@ Function Remove-OMSecondaryMPSPrinters {
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$PrimaryMPSPrinterDirectory = ( &({
             if ($IsOMPLusPrimaryMPS) {
-                $OMPrinterPath
+                $OMVariables.Printer
             }
             else {
-                '\\{0}\{1}' -f $OMPrimaryMPS, $OMPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $OMPrimaryMPS, $OMVariables.Printer.Replace(':', '$')
             }
         })),
 
         [parameter(ValueFromPipelineByPropertyName, ParameterSetName = 'byDir')]
         [string]$SecondaryMPSPrinterDirectory = (& ({
             if ($IsOMPLusPrimaryMPS) {
-                '\\{0}\{1}' -f $OMSecondaryMPS, $OMPrinterPath.Replace(':', '$')
+                '\\{0}\{1}' -f $OMSecondaryMPS, $OMVariables.Printer.Replace(':', '$')
             }
             else {
-                $OMPrinterPath
+                $OMVariables.Printer
             }
         })),
 
