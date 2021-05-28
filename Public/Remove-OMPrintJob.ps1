@@ -112,9 +112,9 @@ Function Remove-OMPrintJob {
     )
 
     begin {
-        $dccResetPath   = [system.io.path]::Combine($BinPath, 'dccreset.exe')
-        $dccCancelPath  = [system.io.path]::Combine($BinPath, 'dcccancel.exe')
-        $dccGrpPath     = [system.io.path]::Combine($BinPath, 'dccgrp.exe')
+        $dccResetPath   = [system.io.path]::Combine($OMVariables.Bin, 'dccreset.exe')
+        $dccCancelPath  = [system.io.path]::Combine($OMVariables.Bin, 'dcccancel.exe')
+        $dccGrpPath     = [system.io.path]::Combine($OMVariables.Bin, 'dccgrp.exe')
     }
 
     process {
@@ -159,10 +159,9 @@ Function Remove-OMPrintJob {
                         FilePath        = $dccGrpPath
                         ArgumentList    = 'cancel time={0}m' -f $JobAgeInMinutes
                         WindowStyle     = 'Hidden'
-                        Verb            = 'RunAs'
                         Wait            = $true
                     }
-                    Start-Process @ProcSplat
+                    Start-Process @ProcSplat -Verb RunAs
                 }
             }
 

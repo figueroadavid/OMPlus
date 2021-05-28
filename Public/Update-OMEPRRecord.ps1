@@ -408,7 +408,7 @@ elseif ($PSVersionTable.PSVersion.Major -lt 5 -and $IsOMPrimaryMPS) {
                                $MyRecord.DriveName,  $MyRecord.TrayName,        $MyRecord.DuplexOption,
                                $MyRecord.PaperSize,  $MyRecord.IsRX,            $MyRecord.MediaType )
                 $thisLine = '{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}' -f $argArray
-                $TopSection.AppendLine( $($MyRecord | ConvertFrom-CSV -join '|') )
+                $TopSection.AppendLine( $($thisLine | ConvertFrom-CSV -join '|') )
             }
             else {
                 $TopSection.AppendLine($line)

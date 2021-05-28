@@ -65,7 +65,9 @@ function Get-OMJobCountByStatus {
 
     foreach ($state in $Status ) {
         Write-Verbose -message ('Processing list for ({0})' -f $state)
-        $thisCount = (dccgrp list status=$state | Where-Object { $_ -notmatch 'No requests'}).count
+
+        $DCCGrpPath     = [system.io.path]::Combine($OMVariables.Bin, 'dccgrp.exe')
+        $thisCount      = (& $DCCGrpPath list status=$state | Where-Object { $_ -notmatch 'No requests'}).count
         $Return.Add($state, $thisCount)
     }
 

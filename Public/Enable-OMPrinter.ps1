@@ -34,7 +34,7 @@ Function Enable-OMPrinter {
             $PrinterNameCount = $PrinterName.Count
             $CurrentCount = 0
         }
-        $DCCEnable = [system.io.path]::combine( $env:omhome, 'bin','dccenable.exe' )
+        $DCCEnable = [system.io.path]::combine( $OMVariables.Bin,'dccenable.exe' )
     }
 
     process {

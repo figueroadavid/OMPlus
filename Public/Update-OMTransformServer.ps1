@@ -33,11 +33,10 @@ function Update-OMTransformServer {
         $pingSplat = @{
             FilePath        = $PingMsgPath
             ArgumentList    = $thisHost
-            Verb            = 'runas'
             Wait            = $true
             WindowStyle    = 'Hidden'
         }
         Write-Verbose -Message ('Triggering update for {0}' -f $thisHost)
-        Start-Process @pingSplat
+        Start-Process @pingSplat -Verb RunAs
     }
 }

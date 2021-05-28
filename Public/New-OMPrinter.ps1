@@ -448,12 +448,16 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
                     Wait            = $true
                     WindowStyle     = 'Hidden'
                 }
-                Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
-                if ($IsOMPLusPrimaryMPS -eq $false) {
-                    $Message = 'Be aware that this is a secondary Master Print Server, and WILL BE OVERWRITTEN by the primary'
+
+                if ($IsOMPLusPrimaryMPS) {
+                    Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
+                    Start-Process @ProcSplat -Verb RunAs
+                }
+                else {
+                    $Message = 'Be aware that this is a secondary Master Print Server; not creating {0}' -f $PrinterName
                     Write-Warning -Message $Message
                 }
-                Start-Process @ProcSplat -Verb RunAs
+
             }
         }
     }
@@ -855,12 +859,16 @@ else {
                     Wait            = $true
                     WindowStyle     = 'Hidden'
                 }
-                Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
-                if ($IsOMPLusPrimaryMPS -eq $false) {
-                    $Message = 'Be aware that this is a secondary Master Print Server, and WILL BE OVERWRITTEN by the primary'
+
+                if ($IsOMPLusPrimaryMPS) {
+                    Write-Verbose -Message ('Creating printer: {0}' -f $PrinterName) -Verbose
+                    Start-Process @ProcSplat -Verb RunAs
+                }
+                else {
+                    $Message = 'Be aware that this is a secondary Master Print Server; not creating {0}' -f $PrinterName
                     Write-Warning -Message $Message
                 }
-                Start-Process @ProcSplat -Verb RunAs
+
             }
         }
     }

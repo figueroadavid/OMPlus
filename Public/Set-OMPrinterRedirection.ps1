@@ -52,7 +52,7 @@ function Set-OMPrinterRedirection {
         }
     }
 
-    if ($PSCmdlet.ShouldProcess('','',$PSCmdMessage)) {
+    if ($PSCmdlet.ShouldProcess($PSCmdMessage,'','')) {
         $ProcessStartInfo                           = [System.Diagnostics.ProcessStartInfo]::new()
         $ProcessStartInfo.FileName                  = [system.io.path]::Combine($OMVariables.Bin, 'dccswitch.exe')
         $ProcessStartInfo.WorkingDirectory          = $OMVariables.System

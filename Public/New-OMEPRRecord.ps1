@@ -300,7 +300,7 @@ if ($IsOMPrimaryMPS) {
                         Value = $thisRecord
                     }
                     Add-Content @AddSplat
-                    Update-OMTransformServer
+                    Write-Warning -Message 'Do not forget to run Update-OMTransformServer'
                 }
                 else {
                     $thisRecord
@@ -532,13 +532,13 @@ if ($IsOMPrimaryMPS) {
             }
 
             end {
-                if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file', '', '')) {
+                if ($Append -and $PSCmdlet.ShouldProcess('Updating eps_map file','', '')) {
                     $AddSplat = @{
                         Path  = $EPSMapPath
                         Value = $thisRecord
                     }
                     Add-Content @AddSplat
-                    Update-OMTransformServer
+                    Write-Warning -Message 'Do not forget to run Update-OMTransformServer'
                 }
                 else {
                     $thisRecord

@@ -29,7 +29,7 @@ if ($PSVersionTable.PSVersion.Major -ge 5) {
         )
 
         $TypesFile = [system.io.path]::Combine($OMVariables.System, 'types.conf')
-        $XML = New-Object -TypeName XML
+        $XML = [xml]::new()
         $XML.Load($TypesFile)
 
         switch ($DisplayType) {
